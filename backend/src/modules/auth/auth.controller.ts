@@ -8,20 +8,22 @@ import {
 import { env } from '../../config/env.js';
 
 function setRefreshCookie(res: Response, value: string): void {
+  const isProd = env.NODE_ENV === 'production';
   res.cookie(REFRESH_COOKIE_NAME, value, {
     httpOnly: true,
-    secure: env.NODE_ENV === 'production',
-    sameSite: 'strict',
+    secure: isProd,
+    sameSite: isProd ? 'none' : 'lax',
     path: REFRESH_COOKIE_PATH,
     maxAge: REFRESH_MAX_AGE_MS,
   });
 }
 
 function clearRefreshCookie(res: Response): void {
+  const isProd = env.NODE_ENV === 'production';
   res.clearCookie(REFRESH_COOKIE_NAME, {
     httpOnly: true,
-    secure: env.NODE_ENV === 'production',
-    sameSite: 'strict',
+    secure: isProd,
+    sameSite: isProd ? 'none' : 'lax',
     path: REFRESH_COOKIE_PATH,
   });
 }

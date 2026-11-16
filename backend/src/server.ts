@@ -18,8 +18,8 @@ async function bootstrap() {
 
     // 3. Start listening
     const port = env.PORT;
-    server = app.listen(port, () => {
-      logger.info(`🚀 LeadNivesh API server listening on http://localhost:${port}`);
+    server = app.listen(port, '0.0.0.0', () => {
+      logger.info(`🚀 LeadNivesh API server listening on http://0.0.0.0:${port}`);
       logger.info(`Environment: ${env.NODE_ENV}`);
     });
   } catch (error) {

@@ -20,10 +20,22 @@ export async function connectDB(uri = env.MONGODB_URI): Promise<typeof mongoose>
 
   try {
     const conn = await mongoose.connect(uri, {
-      serverSelectionTimeoutMS: 5000,
+      serverSelectionTimeoutMS: 15000,
+      socketTimeoutMS: 45000,
       autoIndex: env.NODE_ENV !== 'production',
       dbName: 'leadnivash',
     });
+
+    mongoose.connection.on('disconnected', () => {
+      // eslint-disable-next-line no-console
+      console.warn('⚠️ MongoDB disconnected. Attempting reconnection...');
+    });
+
+    mongoose.connection.on('reconnected', () => {
+      // eslint-disable-next-line no-console
+      console.info('✅ MongoDB reconnected successfully.');
+    });
+
     return conn;
   } catch (error) {
     // eslint-disable-next-line no-console

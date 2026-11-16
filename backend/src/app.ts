@@ -54,11 +54,12 @@ app.use(
 
 // 2. CORS (Explicit origin allowlist with credentials)
 const allowedOrigins = env.CORS_ORIGINS.split(',').map((o) => o.trim());
+const allowAll = allowedOrigins.includes('*');
 app.use(
   cors({
     origin: (origin, callback) => {
       // Allow requests with no origin (like mobile apps, curl, server-to-server) or in allowed list
-      if (!origin || allowedOrigins.includes(origin)) {
+      if (!origin || allowAll || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
         callback(new Error(`CORS blocked for origin: ${origin}`));
@@ -66,7 +67,7 @@ app.use(
     },
     credentials: true,
     methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'x-test-suite'],
   })
 );
 
