@@ -1,0 +1,52 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Environment & Secrets — NEVER commit (only .env.example allowed)
+.env
+.env.*
+*.env
+*.env.*
+!.env.example
+!backend/.env.example
+
+# Private Keys & Certificates
+*.pem
+*.key
+id_rsa
+id_ed25519
+*.p12
+*.pfx
+
+# Build & Compilation Output
+dist/
+build/
+out/
+*.tsbuildinfo
+
+# Test Coverage & Logs
+coverage/
+.nyc_output/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE & Editor Settings
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Temporary / Scratch
+tmp/
+temp/

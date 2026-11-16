@@ -1,0 +1,1708 @@
+{
+  "info": {
+    "_postman_id": "leadnivesh-v1-category-suite",
+    "name": "LeadNivesh API - Category-Wise Collection",
+    "description": "Complete categorized API collection for LeadNivesh Real Estate Broker CRM and Intelligence Platform. Contains all 60 endpoints organized by business domain with sample payloads and auto-auth scripts.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{accessToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000",
+      "type": "string"
+    },
+    {
+      "key": "accessToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "propertyId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "buyerId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "dealId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "shareToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "aliasId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "inquiryId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "00. Health & Probes",
+      "description": "Platform liveness, readiness, and API v1 metadata endpoints.",
+      "item": [
+        {
+          "name": "Liveness Check",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "health"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Readiness Check (MongoDB)",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/ready",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "ready"
+              ]
+            }
+          }
+        },
+        {
+          "name": "API v1 Root",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "01. Authentication & Sessions",
+      "description": "User registration, authentication, token rotation, and multi-device session management.",
+      "item": [
+        {
+          "name": "Register Broker",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Vikram Malhotra\",\n  \"email\": \"broker.demo@leadnivesh.com\",\n  \"password\": \"Broker@123456\",\n  \"phone\": \"+919876543210\",\n  \"agency\": {\n    \"name\": \"Malhotra Real Estate & Associates\",\n    \"city\": \"Panipat\",\n    \"reraNo\": \"HRERA-PKL-PNP-2023-089\"\n  },\n  \"consent\": {\n    \"termsAccepted\": true,\n    \"privacyVersion\": \"1.0\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "register"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Login Broker (Auto-saves accessToken)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var json = pm.response.json();",
+                  "    if (json.data && json.data.accessToken) {",
+                  "        pm.collectionVariables.set('accessToken', json.data.accessToken);",
+                  "        pm.environment.set('accessToken', json.data.accessToken);",
+                  "        console.log('✅ Access Token auto-saved to collection variables!');",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"broker@leadnivesh.com\",\n  \"password\": \"Broker@123456\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "login"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Login SuperAdmin (Auto-saves accessToken)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var json = pm.response.json();",
+                  "    if (json.data && json.data.accessToken) {",
+                  "        pm.collectionVariables.set('accessToken', json.data.accessToken);",
+                  "        console.log('✅ SuperAdmin Access Token auto-saved!');",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@leadnivesh.com\",\n  \"password\": \"Admin@123456\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "login"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/refresh",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "refresh"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Forgot Password",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"broker@leadnivesh.com\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/forgot-password",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "forgot-password"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"RESET_TOKEN_HERE\",\n  \"newPassword\": \"NewBroker@123456\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/reset-password",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "reset-password"
+              ]
+            }
+          }
+        },
+        {
+          "name": "List Active Sessions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/sessions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "sessions"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Revoke Specific Session",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/sessions/:sessionId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "sessions",
+                ":sessionId"
+              ],
+              "variable": [
+                {
+                  "key": "sessionId",
+                  "value": "SESSION_ID_HERE"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/logout",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "logout"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "02. User Profile & Agency",
+      "description": "Manage broker account, branding, agency details, and data compliance.",
+      "item": [
+        {
+          "name": "Get Current Profile (Me)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "me"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Profile & Agency",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Vikram Malhotra\",\n  \"phone\": \"+919876543210\",\n  \"agency\": {\n    \"name\": \"Malhotra Real Estate & Associates\",\n    \"city\": \"Panipat\",\n    \"reraNo\": \"HRERA-PKL-PNP-2023-089\"\n  },\n  \"preferences\": {\n    \"language\": \"en\",\n    \"budgetTolerancePct\": 15,\n    \"marlaToGaj\": 30.25,\n    \"defaultCity\": \"Panipat\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "me"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Sign Cloudinary Upload for Logo",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/me/logo/sign",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "me",
+                "logo",
+                "sign"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Export My Account Data (GDPR/DPDP)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/me/export",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "me",
+                "export"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Account (Soft Delete + Anonymize)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"confirmationText\": \"DELETE MY ACCOUNT\",\n  \"reason\": \"Testing cleanup\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "me"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "03. Properties (Inventory)",
+      "description": "Manage real estate listings, plot sizes, photo signatures, and matching leads.",
+      "item": [
+        {
+          "name": "List Properties",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/properties?page=1&limit=20&status=available",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "properties"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                },
+                {
+                  "key": "status",
+                  "value": "available"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Property Listing",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    var json = pm.response.json();",
+                  "    if (json.data && json.data._id) {",
+                  "        pm.collectionVariables.set('propertyId', json.data._id);",
+                  "        console.log('Saved propertyId:', json.data._id);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"propertyType\": \"plot\",\n  \"transactionType\": \"resale\",\n  \"locality\": \"Sector 18\",\n  \"city\": \"Panipat\",\n  \"sizeUnit\": \"gaj\",\n  \"sizeValue\": 250,\n  \"priceDemand\": 12500000,\n  \"facing\": \"north-east\",\n  \"roadWidthFt\": 45,\n  \"clientName\": \"Suresh Gupta\",\n  \"clientPhone\": \"+919812345678\",\n  \"ownerVault\": {\n    \"exactPlotNo\": \"Plot 42-B\",\n    \"ownerContact\": \"+919812345678\",\n    \"commissionExpected\": 125000\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/properties",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Property Details By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/properties/{{propertyId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "properties",
+                "{{propertyId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Property Listing",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"priceDemand\": 12000000,\n  \"description\": \"Urgent distress resale in prime location\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/properties/{{propertyId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "properties",
+                "{{propertyId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Property Status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"hold\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/properties/{{propertyId}}/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "properties",
+                "{{propertyId}}",
+                "status"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Sign Photo Upload (Cloudinary)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/properties/photos/sign",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "properties",
+                "photos",
+                "sign"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Find Matches for Property",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/properties/{{propertyId}}/matches",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "properties",
+                "{{propertyId}}",
+                "matches"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Move Property to Trash",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/properties/{{propertyId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "properties",
+                "{{propertyId}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "04. Buyers (Buyer Leads)",
+      "description": "Manage buyer requirements, budgets, preferred locations, and matching inventory.",
+      "item": [
+        {
+          "name": "List Buyers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/buyers?page=1&limit=20&status=active",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "buyers"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                },
+                {
+                  "key": "status",
+                  "value": "active"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Buyer Lead",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    var json = pm.response.json();",
+                  "    if (json.data && json.data._id) {",
+                  "        pm.collectionVariables.set('buyerId', json.data._id);",
+                  "        console.log('Saved buyerId:', json.data._id);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Rahul Verma\",\n  \"phone\": \"+919876512345\",\n  \"propertyType\": \"plot\",\n  \"city\": \"Panipat\",\n  \"preferredLocalities\": [\n    \"Sector 18\",\n    \"Sector 13-17\",\n    \"Model Town\"\n  ],\n  \"budgetMin\": 10000000,\n  \"budgetMax\": 15000000,\n  \"sizeMin\": 200,\n  \"sizeMax\": 300,\n  \"sizeUnit\": \"gaj\",\n  \"urgency\": \"medium\",\n  \"facing\": \"north-east\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/buyers",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "buyers"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Buyer Details By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/buyers/{{buyerId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "buyers",
+                "{{buyerId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Buyer Requirements",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"budgetMax\": 16000000,\n  \"urgency\": \"high\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/buyers/{{buyerId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "buyers",
+                "{{buyerId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Find Matches for Buyer",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/buyers/{{buyerId}}/matches",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "buyers",
+                "{{buyerId}}",
+                "matches"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Move Buyer to Trash",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/buyers/{{buyerId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "buyers",
+                "{{buyerId}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "05. Intelligent Matchmaking",
+      "description": "Match scoring engine comparing locality, price tolerances, size conversions, and urgency.",
+      "item": [
+        {
+          "name": "Ad-Hoc Quick Match Evaluation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"property\": {\n    \"propertyType\": \"plot\",\n    \"locality\": \"Sector 18\",\n    \"priceDemand\": 12500000,\n    \"sizeValue\": 250,\n    \"sizeUnit\": \"gaj\"\n  },\n  \"buyer\": {\n    \"propertyType\": \"plot\",\n    \"preferredLocalities\": [\n      \"Sector 18\"\n    ],\n    \"budgetMin\": 11000000,\n    \"budgetMax\": 13000000,\n    \"sizeMin\": 200,\n    \"sizeMax\": 300,\n    \"sizeUnit\": \"gaj\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/matches/quick",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "matches",
+                "quick"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "06. Deals & Pipeline",
+      "description": "Track property transaction milestones: Token, Agreement, Registry, and Commission collection.",
+      "item": [
+        {
+          "name": "List Deals",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/deals",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "deals"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Deals Summary & Revenue Pipeline",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/deals/summary",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "deals",
+                "summary"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Deal",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    var json = pm.response.json();",
+                  "    if (json.data && json.data._id) {",
+                  "        pm.collectionVariables.set('dealId', json.data._id);",
+                  "        console.log('Saved dealId:', json.data._id);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"propertyId\": \"{{propertyId}}\",\n  \"buyerId\": \"{{buyerId}}\",\n  \"agreedPrice\": 12200000,\n  \"commissionBroker\": 122000,\n  \"stage\": \"token\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/deals",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "deals"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Deal Details",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/deals/{{dealId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "deals",
+                "{{dealId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Deal Stage",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"stage\": \"agreement\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/deals/{{dealId}}/stage",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "deals",
+                "{{dealId}}",
+                "stage"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Record Deal Payment Installment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 50000,\n  \"paymentMode\": \"bank_transfer\",\n  \"notes\": \"Token advance received in bank\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/deals/{{dealId}}/payments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "deals",
+                "{{dealId}}",
+                "payments"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Deal",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/deals/{{dealId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "deals",
+                "{{dealId}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "07. AI Parser (Natural Language)",
+      "description": "Parse unstructured Hindi/Hinglish WhatsApp messages into structured listings or buyer requirements.",
+      "item": [
+        {
+          "name": "Parse WhatsApp Message (Preview)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rawText\": \"Sector 18 me 250 gaj plot demand 1.25 cr north facing urgent sale broker contact Suresh 9812345678\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/parse",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "parse"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Commit Parsed Entity to Database",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"entityType\": \"property\",\n  \"payload\": {\n    \"propertyType\": \"plot\",\n    \"transactionType\": \"resale\",\n    \"locality\": \"Sector 18\",\n    \"city\": \"Panipat\",\n    \"sizeUnit\": \"gaj\",\n    \"sizeValue\": 250,\n    \"priceDemand\": 12500000,\n    \"facing\": \"north-east\",\n    \"clientName\": \"Suresh\",\n    \"clientPhone\": \"+919812345678\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/parse/commit",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "parse",
+                "commit"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "08. Share Links & Public Flyers",
+      "description": "Generate client-ready flyer links that hide sensitive owner details while displaying agency branding.",
+      "item": [
+        {
+          "name": "Generate Property Share Link",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    var json = pm.response.json();",
+                  "    if (json.data && json.data.token) {",
+                  "        pm.collectionVariables.set('shareToken', json.data.token);",
+                  "        console.log('Saved shareToken:', json.data.token);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"propertyId\": \"{{propertyId}}\",\n  \"shareType\": \"branded\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/shares",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "shares"
+              ]
+            }
+          }
+        },
+        {
+          "name": "View Public Property Flyer (Client Web Page)",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/p/{{shareToken}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "p",
+                "{{shareToken}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Revoke Property Share Link",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/shares/:shareId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "shares",
+                ":shareId"
+              ],
+              "variable": [
+                {
+                  "key": "shareId",
+                  "value": "SHARE_ID_HERE"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "09. Inquiries & Lead Capture",
+      "description": "Capture direct buyer inquiries submitted through shared flyer landing pages.",
+      "item": [
+        {
+          "name": "Submit Public Flyer Inquiry",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"shareToken\": \"{{shareToken}}\",\n  \"visitorName\": \"Amit Bansal\",\n  \"visitorPhone\": \"+919811122233\",\n  \"message\": \"Interested in visiting this site tomorrow afternoon\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/public/inquiries",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "public",
+                "inquiries"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Submit Landing Page Contact (To Founder)",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Ramesh Sharma\",\n  \"phone\": \"+919812398765\",\n  \"agencyName\": \"Sharma Estate Advisory\",\n  \"city\": \"Panipat\",\n  \"message\": \"Looking for pro subscription demonstration\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/public/contact",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "public",
+                "contact"
+              ]
+            }
+          }
+        },
+        {
+          "name": "List Broker Inquiries",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/inquiries",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "inquiries"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "10. Locality Aliases (Panipat AI)",
+      "description": "Colloquial locality name normalizer (e.g. 'sec 18' -> 'Sector 18').",
+      "item": [
+        {
+          "name": "List Active Locality Aliases",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/aliases",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "aliases"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Register Custom Locality Alias",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"canonical\": \"Sector 18\",\n  \"alias\": \"huda sector 18\",\n  \"city\": \"Panipat\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/aliases",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "aliases"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Locality Alias",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/aliases/:aliasId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "aliases",
+                ":aliasId"
+              ],
+              "variable": [
+                {
+                  "key": "aliasId",
+                  "value": "ALIAS_ID_HERE"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "11. Dashboard & KPIs",
+      "description": "Aggregated morning overview: listings count, new leads, pipeline stage totals, and urgent followups.",
+      "item": [
+        {
+          "name": "Broker Today Dashboard",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/dashboard/today",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "dashboard",
+                "today"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Broker KPI Summary",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/dashboard",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "dashboard"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "12. Trash & Recycle Bin",
+      "description": "Restore soft-deleted records or permanently purge items with Cloudinary asset cleanup.",
+      "item": [
+        {
+          "name": "List Trashed Items",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/trash",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "trash"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Restore Trashed Item",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/trash/:type/:id/restore",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "trash",
+                ":type",
+                ":id",
+                "restore"
+              ],
+              "variable": [
+                {
+                  "key": "type",
+                  "value": "property"
+                },
+                {
+                  "key": "id",
+                  "value": "RECORD_ID_HERE"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Permanent Delete Trashed Item",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"confirmationText\": \"PERMANENT DELETE\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/trash/:type/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "trash",
+                ":type",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "type",
+                  "value": "property"
+                },
+                {
+                  "key": "id",
+                  "value": "RECORD_ID_HERE"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "13. SuperAdmin",
+      "description": "System administration: list all brokers, change subscription tiers, and view usage metrics.",
+      "item": [
+        {
+          "name": "List All Platform Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/admin/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "admin",
+                "users"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Broker Subscription Plan",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"planTier\": \"pro\",\n  \"durationMonths\": 12\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/admin/users/:userId/plan",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "admin",
+                "users",
+                ":userId",
+                "plan"
+              ],
+              "variable": [
+                {
+                  "key": "userId",
+                  "value": "USER_ID_HERE"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Platform Usage Metrics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/admin/usage",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "admin",
+                "usage"
+              ]
+            }
+          }
+        },
+        {
+          "name": "List Platform Inquiries",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/admin/inquiries",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "admin",
+                "inquiries"
+              ]
+            }
+          }
+        },
+        {
+          "name": "List Founder Contact Leads",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/admin/contacts",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "admin",
+                "contacts"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

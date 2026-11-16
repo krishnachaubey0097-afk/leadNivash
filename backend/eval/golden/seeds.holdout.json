@@ -1,0 +1,148 @@
+[
+  {
+    "id": "holdout-01",
+    "rawText": "Sukhdev Nagar 100 gaj commercial booth for sale 55 lakh fixed price. Call 9812311223",
+    "expected": {
+      "itemType": "listing",
+      "type": "Shop",
+      "locality": "Sukhdev Nagar",
+      "sizeGaj": 100,
+      "priceDemandPaise": 550000000,
+      "purpose": "Sale",
+      "phone": "+919812311223"
+    }
+  },
+  {
+    "id": "holdout-02",
+    "rawText": "Need 300 gaj plot in Ansal City Panipat. Budget 1.1 cr ready payment.",
+    "expected": {
+      "itemType": "buyer",
+      "type": "Plot",
+      "locality": "Ansal City",
+      "sizeMinGaj": 300,
+      "budgetMaxPaise": 1100000000,
+      "purpose": "Sale"
+    }
+  },
+  {
+    "id": "holdout-03",
+    "rawText": "Sector 6 plot available 180 gaj park facing demand 95 lakh.",
+    "expected": {
+      "itemType": "listing",
+      "type": "Plot",
+      "locality": "Sector 6",
+      "sizeGaj": 180,
+      "priceDemandPaise": 950000000,
+      "purpose": "Sale"
+    }
+  },
+  {
+    "id": "holdout-04",
+    "rawText": "Bajaj Colony 200 gaj plot for sale 65 lakh. Good location near temple.",
+    "expected": {
+      "itemType": "listing",
+      "type": "Plot",
+      "locality": "Bajaj Colony",
+      "sizeGaj": 200,
+      "priceDemandPaise": 650000000,
+      "purpose": "Sale"
+    }
+  },
+  {
+    "id": "holdout-05",
+    "rawText": "Buyer demanding 250 gaj kothi in Model Town Panipat budget 2.5 cr. Contact 9896012345",
+    "expected": {
+      "itemType": "buyer",
+      "type": "Kothi",
+      "locality": "Model Town",
+      "sizeMinGaj": 250,
+      "budgetMaxPaise": 2500000000,
+      "purpose": "Sale",
+      "phone": "+919896012345"
+    }
+  },
+  {
+    "id": "holdout-06",
+    "rawText": "Sector 24 plot 220 gaj corner piece 1.4 cr demand urgent bechna hai.",
+    "expected": {
+      "itemType": "listing",
+      "type": "Plot",
+      "locality": "Sector 24",
+      "sizeGaj": 220,
+      "priceDemandPaise": 1400000000,
+      "purpose": "Sale"
+    }
+  },
+  {
+    "id": "holdout-07",
+    "rawText": "Tehsil Camp residential floor 120 gaj 40 lakh urgent sale.",
+    "expected": {
+      "itemType": "listing",
+      "type": "Floor",
+      "locality": "Tehsil Camp",
+      "sizeGaj": 120,
+      "priceDemandPaise": 400000000,
+      "purpose": "Sale"
+    }
+  },
+  {
+    "id": "holdout-08",
+    "rawText": "Requirement: Need 2bhk flat in Ansals for small family budget 45-50 lakh.",
+    "expected": {
+      "itemType": "buyer",
+      "type": "Flat",
+      "locality": "Ansals",
+      "budgetMaxPaise": 500000000,
+      "purpose": "Sale"
+    }
+  },
+  {
+    "id": "holdout-09",
+    "rawText": "Sanoli Road warehouse / godown 400 gaj on rent 40000 per month.",
+    "expected": {
+      "itemType": "listing",
+      "type": "Shop",
+      "locality": "Sanoli Road",
+      "sizeGaj": 400,
+      "priceDemandPaise": 4000000,
+      "purpose": "Rent"
+    }
+  },
+  {
+    "id": "holdout-10",
+    "rawText": "Client requirement: 150 gaj plot wanted in Sector 11 or Sector 12 Panipat budget 1 cr.",
+    "expected": {
+      "itemType": "buyer",
+      "type": "Plot",
+      "locality": "Sector 11",
+      "sizeMinGaj": 150,
+      "budgetMaxPaise": 1000000000,
+      "purpose": "Sale"
+    }
+  },
+  {
+    "id": "holdout-11",
+    "rawText": "Sector 13 luxury 3bhk builder floor 200 gaj brand new 1.15 cr demand. Owner 9812000011",
+    "expected": {
+      "itemType": "listing",
+      "type": "Floor",
+      "locality": "Sector 13",
+      "sizeGaj": 200,
+      "priceDemandPaise": 1150000000,
+      "purpose": "Sale",
+      "phone": "+919812000011"
+    }
+  },
+  {
+    "id": "holdout-12",
+    "rawText": "Urgent buyer for 3bhk kothi in Eldeco Panipat budget up to 1.8 cr.",
+    "expected": {
+      "itemType": "buyer",
+      "type": "Kothi",
+      "locality": "Eldeco",
+      "budgetMaxPaise": 1800000000,
+      "purpose": "Sale"
+    }
+  }
+]
+

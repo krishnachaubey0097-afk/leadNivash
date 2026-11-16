@@ -1,0 +1,240 @@
+[
+  {
+    "id": "seed-01",
+    "rawText": "Model Town main 200 gaj plot urgent sale. Demand 1.25 cr. Direct owner deal. Contact 9812345678",
+    "expected": {
+      "itemType": "listing",
+      "type": "Plot",
+      "locality": "Model Town",
+      "sizeGaj": 200,
+      "priceDemandPaise": 1250000000,
+      "purpose": "Sale"
+    }
+  },
+  {
+    "id": "seed-02",
+    "rawText": "Sector 12 kothi for sale 250 gaj luxury built 3 cr demand call 9876543210",
+    "expected": {
+      "itemType": "listing",
+      "type": "Kothi",
+      "locality": "Sector 12",
+      "sizeGaj": 250,
+      "priceDemandPaise": 3000000000,
+      "purpose": "Sale"
+    }
+  },
+  {
+    "id": "seed-03",
+    "rawText": "Ansals Sushant City 3bhk flat urgent sale 65 lakh. 180 gaj. Verified listing.",
+    "expected": {
+      "itemType": "listing",
+      "type": "Flat",
+      "locality": "Ansals",
+      "sizeGaj": 180,
+      "priceDemandPaise": 650000000,
+      "purpose": "Sale"
+    }
+  },
+  {
+    "id": "seed-04",
+    "rawText": "Client requirement: Need 200 to 250 gaj plot in Model Town or Sector 11. Budget 1.5 cr max. Genuine buyer.",
+    "expected": {
+      "itemType": "buyer",
+      "type": "Plot",
+      "locality": "Model Town",
+      "sizeMinGaj": 200,
+      "budgetMaxPaise": 1500000000,
+      "purpose": "Sale"
+    }
+  },
+  {
+    "id": "seed-05",
+    "rawText": "Assandh Road prime shop available on rent 50 gaj 25000 per month.",
+    "expected": {
+      "itemType": "listing",
+      "type": "Shop",
+      "locality": "Assandh Road",
+      "sizeGaj": 50,
+      "priceDemandPaise": 2500000,
+      "purpose": "Rent"
+    }
+  },
+  {
+    "id": "seed-06",
+    "rawText": "Sector 18 builder floor 160 gaj ready to move 85 lakh demand 9812999888",
+    "expected": {
+      "itemType": "listing",
+      "type": "Floor",
+      "locality": "Sector 18",
+      "sizeGaj": 160,
+      "priceDemandPaise": 850000000,
+      "purpose": "Sale"
+    }
+  },
+  {
+    "id": "seed-07",
+    "rawText": "Buyer looking for 100 gaj shop or showroom in GT Road Panipat. Budget up to 80 lakh.",
+    "expected": {
+      "itemType": "buyer",
+      "type": "Shop",
+      "locality": "GT Road",
+      "sizeMinGaj": 100,
+      "budgetMaxPaise": 800000000,
+      "purpose": "Sale"
+    }
+  },
+  {
+    "id": "seed-08",
+    "rawText": "TDI City residential plot 350 gaj north facing for sale 1.75 cr demand",
+    "expected": {
+      "itemType": "listing",
+      "type": "Plot",
+      "locality": "TDI City",
+      "sizeGaj": 350,
+      "priceDemandPaise": 1750000000,
+      "purpose": "Sale"
+    }
+  },
+  {
+    "id": "seed-09",
+    "rawText": "Client requirement chahiye 4bhk kothi in Sector 13 or Eldeco. Budget around 2.2 cr.",
+    "expected": {
+      "itemType": "buyer",
+      "type": "Kothi",
+      "locality": "Sector 13",
+      "budgetMaxPaise": 2200000000,
+      "purpose": "Sale"
+    }
+  },
+  {
+    "id": "seed-10",
+    "rawText": "Chandni Bagh 150 gaj old house for sale urgent 45 lakh demand only cash/cheque.",
+    "expected": {
+      "itemType": "listing",
+      "type": "Kothi",
+      "locality": "Chandni Bagh",
+      "sizeGaj": 150,
+      "priceDemandPaise": 450000000,
+      "purpose": "Sale"
+    }
+  },
+  {
+    "id": "seed-11",
+    "rawText": "Sector 25 industrial plot 500 gaj for sale. Demand 2.8 cr.",
+    "expected": {
+      "itemType": "listing",
+      "type": "Plot",
+      "locality": "Sector 25",
+      "sizeGaj": 500,
+      "priceDemandPaise": 2800000000,
+      "purpose": "Sale"
+    }
+  },
+  {
+    "id": "seed-12",
+    "rawText": "Client req: 2bhk flat for rent in Eldeco Estate. Budget 15000 per month.",
+    "expected": {
+      "itemType": "buyer",
+      "type": "Flat",
+      "locality": "Eldeco Estate",
+      "budgetMaxPaise": 1500000,
+      "purpose": "Rent"
+    }
+  },
+  {
+    "id": "seed-13",
+    "rawText": "Sukhdev Nagar 100 gaj commercial booth for sale 55 lakh fixed price.",
+    "expected": {
+      "itemType": "listing",
+      "type": "Shop",
+      "locality": "Sukhdev Nagar",
+      "sizeGaj": 100,
+      "priceDemandPaise": 550000000,
+      "purpose": "Sale"
+    }
+  },
+  {
+    "id": "seed-14",
+    "rawText": "Need 300 gaj plot in Ansal City Panipat. Budget 1.1 cr ready payment.",
+    "expected": {
+      "itemType": "buyer",
+      "type": "Plot",
+      "locality": "Ansal City",
+      "sizeMinGaj": 300,
+      "budgetMaxPaise": 1100000000,
+      "purpose": "Sale"
+    }
+  },
+  {
+    "id": "seed-15",
+    "rawText": "Sector 6 plot available 180 gaj park facing demand 95 lakh.",
+    "expected": {
+      "itemType": "listing",
+      "type": "Plot",
+      "locality": "Sector 6",
+      "sizeGaj": 180,
+      "priceDemandPaise": 950000000,
+      "purpose": "Sale"
+    }
+  },
+  {
+    "id": "seed-16",
+    "rawText": "Bajaj Colony 200 gaj plot for sale 65 lakh. Good location near temple.",
+    "expected": {
+      "itemType": "listing",
+      "type": "Plot",
+      "locality": "Bajaj Colony",
+      "sizeGaj": 200,
+      "priceDemandPaise": 650000000,
+      "purpose": "Sale"
+    }
+  },
+  {
+    "id": "seed-17",
+    "rawText": "Buyer demanding 250 gaj kothi in Model Town Panipat budget 2.5 cr.",
+    "expected": {
+      "itemType": "buyer",
+      "type": "Kothi",
+      "locality": "Model Town",
+      "sizeMinGaj": 250,
+      "budgetMaxPaise": 2500000000,
+      "purpose": "Sale"
+    }
+  },
+  {
+    "id": "seed-18",
+    "rawText": "Sector 24 plot 220 gaj corner piece 1.4 cr demand urgent bechna hai.",
+    "expected": {
+      "itemType": "listing",
+      "type": "Plot",
+      "locality": "Sector 24",
+      "sizeGaj": 220,
+      "priceDemandPaise": 1400000000,
+      "purpose": "Sale"
+    }
+  },
+  {
+    "id": "seed-19",
+    "rawText": "Tehsil Camp residential floor 120 gaj 40 lakh urgent sale.",
+    "expected": {
+      "itemType": "listing",
+      "type": "Floor",
+      "locality": "Tehsil Camp",
+      "sizeGaj": 120,
+      "priceDemandPaise": 400000000,
+      "purpose": "Sale"
+    }
+  },
+  {
+    "id": "seed-20",
+    "rawText": "Requirement: Need 2bhk flat in Ansals for small family budget 45-50 lakh.",
+    "expected": {
+      "itemType": "buyer",
+      "type": "Flat",
+      "locality": "Ansals",
+      "budgetMaxPaise": 500000000,
+      "purpose": "Sale"
+    }
+  }
+]
+
