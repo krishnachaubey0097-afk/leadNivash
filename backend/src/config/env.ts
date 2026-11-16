@@ -17,7 +17,7 @@ const envSchema = z.object({
   CLIENT_URL: z.string().default('http://localhost:5173'),
   PUBLIC_BASE_URL: z.string().default('http://localhost:5000'),
   CORS_ORIGINS: z.string().default('http://localhost:5173'),
-  ENCRYPTION_KEY: z.string().length(64, 'ENCRYPTION_KEY must be exactly 64 hex characters (32 bytes)'),
+  ENCRYPTION_KEY: z.string().transform(s => s.trim().replace(/^["']|["']$/g, '')).pipe(z.string().length(64, 'ENCRYPTION_KEY must be exactly 64 hex characters (32 bytes)')),
 
   // Optional OAuth
   GOOGLE_CLIENT_ID: z.string().optional(),
