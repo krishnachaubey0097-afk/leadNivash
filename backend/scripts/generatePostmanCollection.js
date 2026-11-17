@@ -8,7 +8,7 @@ const collection = {
     schema: 'https://schema.getpostman.com/json/collection/v2.1.0/collection.json'
   },
   variable: [
-    { key: 'baseUrl', value: 'http://localhost:5000', type: 'string' },
+    { key: 'baseUrl', value: 'https://leadnivash.onrender.com', type: 'string' },
     { key: 'accessToken', value: '', type: 'string' },
     { key: 'propertyId', value: '', type: 'string' },
     { key: 'buyerId', value: '', type: 'string' },
