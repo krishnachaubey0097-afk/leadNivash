@@ -266,6 +266,7 @@ Broker notifications & dashboard ───────────────�
 ## 4. Endpoints Master Directory (13 Categories / 59 Endpoints)
 
 ### Category 00 — Health & Probes
+* `GET /` — Root Welcome Info. Returns API status, version `1.0.0`, probes, and resource endpoints (`200 OK`).
 * `GET /health` — Liveness check. Returns uptime and server timestamp. (`200 OK`).
 * `GET /ready` — Readiness check. Verifies active MongoDB Atlas connection. (`200 OK` or `503 Service Unavailable`).
 * `GET /api/v1` — API root service status. Returns version `1.0.0`. (`200 OK`).

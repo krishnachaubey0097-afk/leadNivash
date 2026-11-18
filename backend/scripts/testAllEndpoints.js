@@ -49,6 +49,7 @@ async function runTests() {
 
   // --- 00. Health & Probes ---
   console.log('--- Category 00: Health & Probes ---');
+  await req('Root Welcome Info', 'GET', '/');
   await req('Liveness Probe', 'GET', '/health');
   await req('Readiness Probe', 'GET', '/ready');
   await req('API v1 Base Info', 'GET', '/api/v1');

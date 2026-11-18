@@ -23,6 +23,15 @@ const collection = {
       name: '00 - Health & Probes',
       item: [
         {
+          name: 'Root Welcome Info',
+          request: {
+            method: 'GET',
+            header: [],
+            url: { raw: '{{baseUrl}}/' },
+            description: 'Returns API root welcome, status, version and resource endpoints.'
+          }
+        },
+        {
           name: 'Liveness Probe (Health)',
           request: {
             method: 'GET',

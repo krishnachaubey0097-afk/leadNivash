@@ -87,7 +87,29 @@ if (env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
-// 6. Platform Probes: /health (liveness) & /ready (readiness)
+// 6. Root & Platform Probes: / (welcome), /health (liveness), /ready (readiness)
+app.get('/', (_req: Request, res: Response) => {
+  res.status(200).json({
+    success: true,
+    message: 'Welcome to LeadNivesh API - Modern Real Estate Broker Platform',
+    version: '1.0.0',
+    status: 'online',
+    docs: '/api/v1',
+    probes: {
+      health: '/health',
+      ready: '/ready',
+    },
+    endpoints: {
+      auth: '/api/v1/auth/login',
+      properties: '/api/v1/properties',
+      buyers: '/api/v1/buyers',
+      deals: '/api/v1/deals',
+      matches: '/api/v1/matches',
+      parse: '/api/v1/parse',
+    },
+  });
+});
+
 app.get('/health', (_req: Request, res: Response) => {
   res.status(200).json({
     success: true,
