@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>leadNivash — Mobile & Web Interactive Preview</title>
+  <link rel="icon" type="image/png" href="./frontend/public/logo-icon.png">
+
+  <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS via CDN for standalone file viewing -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#ECFDF5',
+              100: '#D1FAE5',
+              500: '#10B981',
+              600: '#059669',
+              700: '#047857',
+              800: '#065F46',
+              900: '#064E3B',
+              950: '#022C22',
+            },
+            ink: '#0F172A',
+            text: '#334155',
+            muted: '#64748B',
+            bg: '#F8FAFC',
+            surface: '#FFFFFF',
+            border: '#E2E8F0',
+            gold: '#D97706',
+            'gold-bg': '#FEF3C7',
+            'gold-text': '#B45309',
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            heading: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+          },
+          borderRadius: {
+            'card': '20px',
+            'card-lg': '28px',
+            'input': '14px',
+          },
+          boxShadow: {
+            'card': '0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.02)',
+            'card-hover': '0 16px 32px -4px rgba(15, 23, 42, 0.08), 0 4px 12px -2px rgba(15, 23, 42, 0.03)',
+            'glow': '0 0 50px -10px rgba(5, 150, 105, 0.2)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    /* Smooth custom scrolling */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 9999px; }
+    .dark ::-webkit-scrollbar-thumb { background: #334155; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    
+    /* Device frame animations */
+    .device-shell {
+      transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+  </style>
+</head>
+<body class="bg-slate-900 text-slate-800 antialiased min-h-screen flex flex-col font-sans selection:bg-emerald-100 selection:text-emerald-800">
+
+  <!-- TOP DEVICE CONTROLS BAR -->
+  <header class="sticky top-0 z-50 bg-slate-950/90 backdrop-blur-md border-b border-slate-800 px-4 py-3 flex flex-wrap items-center justify-between gap-3 text-white">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 rounded-xl bg-emerald-600/20 border border-emerald-500/40 p-1 flex items-center justify-center">
+        <i data-lucide="home" class="w-4 h-4 text-emerald-400"></i>
+      </div>
+      <div>
+        <div class="flex items-center gap-1.5 font-heading font-black text-sm tracking-tight">
+          <span>lead<span class="text-emerald-400">Nivash</span></span>
+          <span class="text-[10px] bg-emerald-950 text-emerald-400 px-2 py-0.5 rounded-full border border-emerald-800/60 font-mono">Mobile Preview</span>
+        </div>
+        <p class="text-[10px] text-slate-400">Independent Broker OS · Complete Frontend</p>
+      </div>
+    </div>
+
+    <!-- View Mode Switcher -->
+    <div class="flex items-center gap-1.5 p-1 bg-slate-900 border border-slate-800 rounded-full text-xs font-semibold">
+      <button onclick="setDevice('mobile-sm')" id="btn-mobile-sm" class="px-3 py-1.5 rounded-full flex items-center gap-1.5 bg-emerald-600 text-white shadow-xs transition">
+        <i data-lucide="smartphone" class="w-3.5 h-3.5"></i>
+        <span>Mobile (375px)</span>
+      </button>
+
+      <button onclick="setDevice('mobile-lg')" id="btn-mobile-lg" class="px-3 py-1.5 rounded-full flex items-center gap-1.5 text-slate-400 hover:text-white transition">
+        <i data-lucide="tablet" class="w-3.5 h-3.5"></i>
+        <span>Android (412px)</span>
+      </button>
+
+      <button onclick="setDevice('full')" id="btn-full" class="px-3 py-1.5 rounded-full flex items-center gap-1.5 text-slate-400 hover:text-white transition">
+        <i data-lucide="monitor" class="w-3.5 h-3.5"></i>
+        <span>Full Web</span>
+      </button>
+    </div>
+
+    <!-- Right utility controls -->
+    <div class="flex items-center gap-2">
+      <button onclick="toggleTheme()" class="w-8 h-8 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-300 hover:text-white transition" title="Toggle Light/Dark Theme">
+        <i data-lucide="moon" id="theme-icon" class="w-4 h-4"></i>
+      </button>
+      <a href="http://localhost:5173" target="_blank" class="text-xs bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-full text-slate-200 flex items-center gap-1 transition">
+        <span>Open Vite Server</span>
+        <i data-lucide="external-link" class="w-3 h-3"></i>
+      </a>
+    </div>
+  </header>
+
+  <!-- DEVICE STAGE CONTAINER -->
+  <main class="flex-1 flex items-start justify-center p-3 sm:p-6 overflow-y-auto">
+    <div id="device-wrapper" class="device-shell w-[375px] bg-white dark:bg-[#0B0F17] rounded-[36px] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.6)] border-[8px] border-slate-800 overflow-hidden flex flex-col relative transition-all duration-300">
+      
+      <!-- Mobile Status Bar (Simulated) -->
+      <div id="status-bar" class="w-full bg-white dark:bg-[#0B0F17] text-slate-800 dark:text-slate-200 px-6 pt-3 pb-1 flex items-center justify-between text-[11px] font-semibold border-b border-slate-100 dark:border-slate-800/80 select-none">
+        <span>9:41</span>
+        <div class="w-20 h-4 bg-slate-800 rounded-full mx-auto"></div>
+        <div class="flex items-center gap-1.5">
+          <i data-lucide="wifi" class="w-3 h-3"></i>
+          <i data-lucide="battery" class="w-3.5 h-3.5"></i>
+        </div>
+      </div>
+
+      <!-- SCROLLABLE APP CONTENT -->
+      <div class="flex-1 overflow-y-auto bg-slate-50 dark:bg-[#0B0F17] text-slate-700 dark:text-slate-300">
+        
+        <!-- ============================================== -->
+        <!-- SECTION 1: HEADER & HERO                      -->
+        <!-- ============================================== -->
+        <header class="sticky top-0 z-40 bg-white/90 dark:bg-[#0B0F17]/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 h-14 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-lg bg-white border border-slate-200 p-1 shadow-xs">
+              <img src="./frontend/public/logo-icon.png" alt="leadNivash" class="w-full h-full object-contain">
+            </div>
+            <span class="text-base font-black tracking-tight text-slate-900 dark:text-white font-heading">
+              lead<span class="text-emerald-600">Nivash</span>
+            </span>
+          </div>
+
+          <a href="#inquiry-form" class="px-3 py-1 rounded-full bg-emerald-700 text-white text-[11px] font-bold shadow-xs">
+            Free Demo
+          </a>
+        </header>
+
+        <!-- Hero Content -->
+        <section class="p-5 pt-8 text-center space-y-4">
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800/40 text-emerald-700 dark:text-emerald-400 text-[11px] font-bold">
+            <i data-lucide="sparkles" class="w-3 h-3 text-emerald-600"></i>
+            <span>Built for Indian Property Brokers</span>
+          </div>
+
+          <h1 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white font-heading leading-tight tracking-tight">
+            Turn Messages into <br>
+            <span class="text-emerald-600">Property Deals.</span>
+          </h1>
+
+          <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed max-w-sm mx-auto">
+            Turn scattered WhatsApp enquiries into an organised property business. Save time, find the right matches faster, and manage deals without leaking owner contacts.
+          </p>
+
+          <div class="flex flex-col gap-2.5 pt-2 max-w-xs mx-auto">
+            <a href="#inquiry-form" class="w-full py-3 px-4 rounded-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-emerald-700/20">
+              <span>Get Free Demo</span>
+              <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </a>
+
+            <a href="./frontend/dist/index.html#/register" class="w-full py-3 px-4 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold text-xs flex items-center justify-center">
+              Start 14-Day Free Trial
+            </a>
+          </div>
+
+          <!-- Product preview card (Smudge / Orion style) -->
+          <div class="pt-4 text-left">
+            <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
+              <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800 text-[10px] font-bold">
+                <span class="text-slate-400 uppercase tracking-wider">Live Workspace Preview</span>
+                <span class="text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-full">Encrypted Vault Active</span>
+              </div>
+
+              <!-- Matched Card -->
+              <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/70 dark:border-slate-700/60 space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300">
+                    96% High Match
+                  </span>
+                  <span class="text-[10px] text-slate-400">Model Town, Panipat</span>
+                </div>
+                <h4 class="text-xs font-bold text-slate-900 dark:text-white">3 BHK Luxury Builder Floor</h4>
+                <div class="flex items-center justify-between text-xs pt-1 border-t border-slate-200/60 dark:border-slate-700/60">
+                  <span class="text-slate-500">Buyer: Rajesh Sharma</span>
+                  <span class="font-black text-emerald-700 dark:text-emerald-400">₹1.25 Cr</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- SECTION 2: PURPOSE-BUILT FOR AGENTS           -->
+        <!-- ============================================== -->
+        <section class="p-5 bg-white dark:bg-slate-900/60 border-y border-slate-200 dark:border-slate-800 space-y-4">
+          <div class="text-center space-y-1">
+            <span class="text-[10px] font-black uppercase tracking-widest text-emerald-700">PURPOSE-BUILT FOR AGENTS</span>
+            <h2 class="text-xl font-black text-slate-900 dark:text-white font-heading">Everything You Need to Turn Enquiries into Deals.</h2>
+            <p class="text-xs text-slate-500 leading-relaxed">One organised workspace for properties, buyers, and pipeline.</p>
+          </div>
+
+          <!-- Video demonstration mock -->
+          <div class="rounded-2xl border border-slate-800 bg-gradient-to-br from-slate-950 to-emerald-950 text-white p-5 aspect-[9/16] max-w-[280px] mx-auto flex flex-col items-center justify-center text-center space-y-3 relative overflow-hidden shadow-lg">
+            <button class="w-14 h-14 rounded-full bg-emerald-600 text-white flex items-center justify-center shadow-lg shadow-emerald-600/40">
+              <i data-lucide="play" class="w-6 h-6 ml-1"></i>
+            </button>
+            <h4 class="text-xs font-bold">Real-time Mobile Workflow</h4>
+            <p class="text-[10px] text-slate-300">WhatsApp message to masked flyer in 60 seconds.</p>
+            <span class="text-[9px] bg-white/10 px-2.5 py-0.5 rounded-full text-emerald-300">
+              /assets/videos/leadnivash-mobile-demo.mp4
+            </span>
+          </div>
+
+          <!-- 6 Capabilities Grid -->
+          <div class="grid grid-cols-2 gap-2 text-left pt-2">
+            <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-1">
+              <i data-lucide="building" class="w-4 h-4 text-emerald-600"></i>
+              <h5 class="text-[11px] font-bold text-slate-900 dark:text-white">Smart Inventory</h5>
+              <p class="text-[10px] text-slate-500">Centralised listings</p>
+            </div>
+            <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-1">
+              <i data-lucide="users" class="w-4 h-4 text-emerald-600"></i>
+              <h5 class="text-[11px] font-bold text-slate-900 dark:text-white">Buyer Pipeline</h5>
+              <p class="text-[10px] text-slate-500">Budgets & locations</p>
+            </div>
+            <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-1">
+              <i data-lucide="message-square" class="w-4 h-4 text-emerald-600"></i>
+              <h5 class="text-[11px] font-bold text-slate-900 dark:text-white">WhatsApp AI</h5>
+              <p class="text-[10px] text-slate-500">1-tap chat parsing</p>
+            </div>
+            <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-1">
+              <i data-lucide="sparkles" class="w-4 h-4 text-emerald-600"></i>
+              <h5 class="text-[11px] font-bold text-slate-900 dark:text-white">Auto-Matching</h5>
+              <p class="text-[10px] text-slate-500">Score percentages</p>
+            </div>
+            <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-1">
+              <i data-lucide="share-2" class="w-4 h-4 text-emerald-600"></i>
+              <h5 class="text-[11px] font-bold text-slate-900 dark:text-white">Masked Flyers</h5>
+              <p class="text-[10px] text-slate-500">Zero contact leaks</p>
+            </div>
+            <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-1">
+              <i data-lucide="trending-up" class="w-4 h-4 text-emerald-600"></i>
+              <h5 class="text-[11px] font-bold text-slate-900 dark:text-white">Deal Tracking</h5>
+              <p class="text-[10px] text-slate-500">Brokerage records</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- SECTION 3: HOW IT WORKS (5 STEPS)              -->
+        <!-- ============================================== -->
+        <section class="p-5 space-y-4">
+          <div class="text-center space-y-1">
+            <span class="text-[10px] font-black uppercase tracking-widest text-emerald-700">SIMPLE WORKFLOW</span>
+            <h2 class="text-xl font-black text-slate-900 dark:text-white font-heading">From WhatsApp Message to Property Deal.</h2>
+          </div>
+
+          <div class="space-y-2.5 text-left">
+            <div class="p-3.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-1">
+              <div class="flex items-center gap-2">
+                <span class="w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 font-bold text-[10px] flex items-center justify-center">1</span>
+                <h4 class="text-xs font-bold text-slate-900 dark:text-white">Paste a Message</h4>
+              </div>
+              <p class="text-[11px] text-slate-500 pl-7">Copy raw requirement or listing text directly from WhatsApp.</p>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-1">
+              <div class="flex items-center gap-2">
+                <span class="w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 font-bold text-[10px] flex items-center justify-center">2</span>
+                <h4 class="text-xs font-bold text-slate-900 dark:text-white">AI Understands It</h4>
+              </div>
+              <p class="text-[11px] text-slate-500 pl-7">Extracts name, budget, BHK, locality, area, and contact details.</p>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-1">
+              <div class="flex items-center gap-2">
+                <span class="w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 font-bold text-[10px] flex items-center justify-center">3</span>
+                <h4 class="text-xs font-bold text-slate-900 dark:text-white">Save and Organise</h4>
+              </div>
+              <p class="text-[11px] text-slate-500 pl-7">Review fields, make adjustments, and save to your central inventory.</p>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-1">
+              <div class="flex items-center gap-2">
+                <span class="w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 font-bold text-[10px] flex items-center justify-center">4</span>
+                <h4 class="text-xs font-bold text-slate-900 dark:text-white">Find Property Matches</h4>
+              </div>
+              <p class="text-[11px] text-slate-500 pl-7">Compares buyer criteria against available properties with match scores.</p>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-1">
+              <div class="flex items-center gap-2">
+                <span class="w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 font-bold text-[10px] flex items-center justify-center">5</span>
+                <h4 class="text-xs font-bold text-slate-900 dark:text-white">Share and Track</h4>
+              </div>
+              <p class="text-[11px] text-slate-500 pl-7">Send branded masked flyer via WhatsApp and track deal stages.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- SECTION 4: FINANCIAL IMPACT & ROI CALCULATOR  -->
+        <!-- ============================================== -->
+        <section class="p-5 bg-white dark:bg-slate-900/60 border-y border-slate-200 dark:border-slate-800 space-y-4">
+          <div class="text-center space-y-1">
+            <span class="text-[10px] font-black uppercase tracking-widest text-amber-600">FINANCIAL IMPACT</span>
+            <h2 class="text-xl font-black text-slate-900 dark:text-white font-heading">Your Next Deal Could Be Worth More Than You Think.</h2>
+          </div>
+
+          <!-- Interactive Calculator Card -->
+          <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-4 text-left">
+            <div>
+              <div class="flex justify-between text-xs font-bold mb-1">
+                <span class="text-slate-700 dark:text-slate-300">Property Deal Value</span>
+                <span class="text-emerald-700 font-extrabold" id="calc-val-label">₹75,00,000</span>
+              </div>
+              <input type="range" id="deal-slider" min="2000000" max="30000000" step="500000" value="7500000" oninput="updateCalc()" class="w-full accent-emerald-700 cursor-pointer">
+              <div class="flex gap-2 pt-1.5">
+                <button onclick="setCalcVal(4500000)" class="px-2 py-0.5 rounded-full bg-white dark:bg-slate-700 text-[10px] font-semibold border border-slate-200">₹45L</button>
+                <button onclick="setCalcVal(7500000)" class="px-2 py-0.5 rounded-full bg-emerald-700 text-white text-[10px] font-semibold">₹75L</button>
+                <button onclick="setCalcVal(15000000)" class="px-2 py-0.5 rounded-full bg-white dark:bg-slate-700 text-[10px] font-semibold border border-slate-200">₹1.5Cr</button>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between text-xs font-bold mb-1">
+                <span class="text-slate-700 dark:text-slate-300">Commission Rate</span>
+                <span class="text-amber-600 font-extrabold" id="calc-rate-label">1.5%</span>
+              </div>
+              <div class="flex gap-2">
+                <button onclick="setCalcRate(1.0)" class="flex-1 py-1 rounded-lg bg-white dark:bg-slate-700 text-xs font-bold border border-slate-200">1.0%</button>
+                <button onclick="setCalcRate(1.5)" class="flex-1 py-1 rounded-lg bg-amber-600 text-white text-xs font-bold">1.5%</button>
+                <button onclick="setCalcRate(2.0)" class="flex-1 py-1 rounded-lg bg-white dark:bg-slate-700 text-xs font-bold border border-slate-200">2.0%</button>
+              </div>
+            </div>
+
+            <!-- Output Box -->
+            <div class="p-3.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-center space-y-1">
+              <span class="text-[10px] uppercase font-bold text-slate-500">Commission Per Deal</span>
+              <span class="text-2xl font-black text-emerald-700 dark:text-emerald-400 font-heading block" id="calc-per-deal">₹1,12,500</span>
+              <span class="text-[10px] text-slate-400 block pt-1 border-t border-emerald-200/60">Annual Potential (3 deals/mo): <strong class="text-slate-800 dark:text-white" id="calc-annual">₹40,50,000 / yr</strong></span>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- SECTION 5: PRICING                             -->
+        <!-- ============================================== -->
+        <section class="p-5 space-y-4">
+          <div class="text-center space-y-1">
+            <span class="text-[10px] font-black uppercase tracking-widest text-emerald-700">TRANSPARENT INVESTMENT</span>
+            <h2 class="text-xl font-black text-slate-900 dark:text-white font-heading">Simple, High-ROI Pricing.</h2>
+          </div>
+
+          <div class="space-y-3 text-left">
+            <!-- Starter Plan -->
+            <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-2">
+              <span class="text-[10px] font-bold uppercase text-slate-400">Starter Pilot</span>
+              <h3 class="text-xl font-black text-slate-900 dark:text-white font-heading">₹0 <span class="text-xs font-normal text-slate-400">/ 14 Days</span></h3>
+              <p class="text-xs text-slate-500">Up to 15 properties, 10 active buyers, and WhatsApp Analyzer.</p>
+              <button class="w-full py-2.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold text-xs">
+                Start Free Trial
+              </button>
+            </div>
+
+            <!-- Founder Annual Pass -->
+            <div class="p-4 rounded-2xl bg-gradient-to-b from-white to-emerald-50/30 dark:from-slate-900 dark:to-emerald-950/20 border-2 border-emerald-600 shadow-md space-y-2 relative">
+              <span class="absolute top-3 right-3 text-[9px] bg-emerald-700 text-white px-2 py-0.5 rounded-full font-bold uppercase">Most Popular</span>
+              <span class="text-[10px] font-bold uppercase text-emerald-700">Founder Annual Pass</span>
+              <h3 class="text-xl font-black text-slate-900 dark:text-white font-heading">₹3,999 <span class="text-xs font-normal text-slate-400">/ Year</span></h3>
+              <span class="text-[10px] text-emerald-600 font-semibold block -mt-1">(~₹333 / month)</span>
+              <p class="text-xs text-slate-500">Unlimited properties, buyer management, multi-image brochures & custom watermark branding.</p>
+              <button class="w-full py-2.5 rounded-full bg-emerald-700 text-white font-bold text-xs shadow-xs">
+                Get Started
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- SECTION 6: WHY CHOOSE leadNivash              -->
+        <!-- ============================================== -->
+        <section class="p-5 bg-white dark:bg-slate-900/60 border-y border-slate-200 dark:border-slate-800 space-y-3 text-left">
+          <div class="text-center space-y-1 pb-1">
+            <span class="text-[10px] font-black uppercase tracking-widest text-emerald-700">WHY leadNivash</span>
+            <h2 class="text-xl font-black text-slate-900 dark:text-white font-heading">Built Around the Way Property Brokers Actually Work.</h2>
+          </div>
+
+          <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-1">
+            <h4 class="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+              <i data-lucide="search" class="w-4 h-4 text-emerald-600"></i>
+              <span>Never Lose a Match</span>
+            </h4>
+            <p class="text-[11px] text-slate-500">Your buyer requirements and inventory stay organised. Find relevant matches without digging through old chats.</p>
+          </div>
+
+          <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-1">
+            <h4 class="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+              <i data-lucide="shield-check" class="w-4 h-4 text-amber-600"></i>
+              <span>Protect Business Relationships</span>
+            </h4>
+            <p class="text-[11px] text-slate-500">Share professional property flyers without exposing confidential owner contacts. Keep your agency identity on materials.</p>
+          </div>
+
+          <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-1">
+            <h4 class="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+              <i data-lucide="briefcase" class="w-4 h-4 text-blue-600"></i>
+              <span>Manage More, Work Smarter</span>
+            </h4>
+            <p class="text-[11px] text-slate-500">Save time on manual data entry, organise buyers, and track deal stages and commissions from one workspace.</p>
+          </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- SECTION 7: DEMO INQUIRY FORM                  -->
+        <!-- ============================================== -->
+        <section id="inquiry-form" class="p-5 space-y-4 text-left">
+          <div class="p-5 rounded-2xl bg-gradient-to-br from-slate-950 to-emerald-950 text-white space-y-3 border border-slate-800 shadow-xl">
+            <h3 class="text-lg font-black font-heading leading-tight">Ready to Turn Your Enquiries into Deals?</h3>
+            <p class="text-xs text-slate-300">Request a free demo and start your 14-day free trial.</p>
+
+            <form onsubmit="handleDemoSubmit(event)" class="space-y-2.5 pt-2">
+              <input type="text" id="demo-name" required placeholder="Full Name *" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-emerald-500">
+              <input type="tel" id="demo-phone" required placeholder="WhatsApp Number *" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-emerald-500">
+              <input type="text" id="demo-agency" required placeholder="Agency / Business Name *" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-emerald-500">
+              <input type="text" id="demo-city" required placeholder="City (e.g. Panipat / Gurugram) *" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-emerald-500">
+              
+              <button type="submit" id="demo-btn" class="w-full py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-1 shadow-md">
+                <span>Request My Free Demo</span>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+              </button>
+            </form>
+
+            <div id="demo-success" class="hidden p-3 rounded-xl bg-emerald-900/60 border border-emerald-500 text-emerald-200 text-xs text-center space-y-1">
+              <i data-lucide="check-circle-2" class="w-6 h-6 mx-auto text-emerald-400"></i>
+              <p class="font-bold">Demo Request Received!</p>
+              <p class="text-[10px]">We will connect with you on WhatsApp shortly.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- SECTION 8: FOOTER                             -->
+        <!-- ============================================== -->
+        <footer class="p-5 border-t border-slate-200 dark:border-slate-800 text-[11px] text-slate-500 space-y-2 text-center">
+          <div class="flex items-center justify-center gap-2">
+            <img src="./frontend/public/logo-icon.png" alt="leadNivash" class="w-5 h-5 object-contain">
+            <span class="font-bold text-slate-900 dark:text-white">lead<span class="text-emerald-600">Nivash</span></span>
+          </div>
+          <p>© 2026 leadNivash. All rights reserved.</p>
+          <p>Designed with care for Indian property brokers.</p>
+        </footer>
+
+      </div>
+
+      <!-- BOTTOM MOBILE TAB BAR (Simulated PWA Navigation) -->
+      <nav class="w-full bg-white dark:bg-[#0B0F17] border-t border-slate-200 dark:border-slate-800 px-4 py-2 flex items-center justify-between text-[10px] font-bold">
+        <a href="#hero" class="flex flex-col items-center text-emerald-700 dark:text-emerald-400">
+          <i data-lucide="layout-dashboard" class="w-4 h-4 mb-0.5"></i>
+          <span>Home</span>
+        </a>
+        <a href="#capabilities" class="flex flex-col items-center text-slate-400 hover:text-slate-800">
+          <i data-lucide="building" class="w-4 h-4 mb-0.5"></i>
+          <span>Features</span>
+        </a>
+        <!-- Raised Center Button -->
+        <a href="#inquiry-form" class="-mt-5 w-11 h-11 rounded-full bg-emerald-700 text-white flex items-center justify-center shadow-md">
+          <i data-lucide="plus" class="w-5 h-5"></i>
+        </a>
+        <a href="#financial-impact" class="flex flex-col items-center text-slate-400 hover:text-slate-800">
+          <i data-lucide="calculator" class="w-4 h-4 mb-0.5"></i>
+          <span>ROI</span>
+        </a>
+        <a href="#pricing" class="flex flex-col items-center text-slate-400 hover:text-slate-800">
+          <i data-lucide="tag" class="w-4 h-4 mb-0.5"></i>
+          <span>Pricing</span>
+        </a>
+      </nav>
+
+    </div>
+  </main>
+
+  <!-- JAVASCRIPT CONTROLLERS -->
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+
+    // Device shell switcher
+    function setDevice(mode) {
+      const wrapper = document.getElementById('device-wrapper');
+      const statusBar = document.getElementById('status-bar');
+      const btnSm = document.getElementById('btn-mobile-sm');
+      const btnLg = document.getElementById('btn-mobile-lg');
+      const btnFull = document.getElementById('btn-full');
+
+      // Reset buttons
+      [btnSm, btnLg, btnFull].forEach(b => {
+        b.className = 'px-3 py-1.5 rounded-full flex items-center gap-1.5 text-slate-400 hover:text-white transition';
+      });
+
+      if (mode === 'mobile-sm') {
+        wrapper.className = 'device-shell w-[375px] bg-white dark:bg-[#0B0F17] rounded-[36px] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.6)] border-[8px] border-slate-800 overflow-hidden flex flex-col relative transition-all duration-300';
+        statusBar.style.display = 'flex';
+        btnSm.className = 'px-3 py-1.5 rounded-full flex items-center gap-1.5 bg-emerald-600 text-white shadow-xs transition';
+      } else if (mode === 'mobile-lg') {
+        wrapper.className = 'device-shell w-[412px] bg-white dark:bg-[#0B0F17] rounded-[36px] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.6)] border-[8px] border-slate-800 overflow-hidden flex flex-col relative transition-all duration-300';
+        statusBar.style.display = 'flex';
+        btnLg.className = 'px-3 py-1.5 rounded-full flex items-center gap-1.5 bg-emerald-600 text-white shadow-xs transition';
+      } else {
+        wrapper.className = 'device-shell w-full max-w-4xl bg-white dark:bg-[#0B0F17] rounded-2xl shadow-xl border border-slate-800 overflow-hidden flex flex-col relative transition-all duration-300';
+        statusBar.style.display = 'none';
+        btnFull.className = 'px-3 py-1.5 rounded-full flex items-center gap-1.5 bg-emerald-600 text-white shadow-xs transition';
+      }
+    }
+
+    // Light / Dark Theme toggle
+    let isDark = false;
+    function toggleTheme() {
+      isDark = !isDark;
+      const html = document.documentElement;
+      const icon = document.getElementById('theme-icon');
+      if (isDark) {
+        html.classList.add('dark');
+        icon.setAttribute('data-lucide', 'sun');
+      } else {
+        html.classList.remove('dark');
+        icon.setAttribute('data-lucide', 'moon');
+      }
+      lucide.createIcons();
+    }
+
+    // Interactive Commission Calculator
+    let currentDealVal = 7500000;
+    let currentRate = 1.5;
+
+    function formatInr(val) {
+      return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(val);
+    }
+
+    function updateCalc() {
+      const slider = document.getElementById('deal-slider');
+      currentDealVal = Number(slider.value);
+      document.getElementById('calc-val-label').innerText = formatInr(currentDealVal);
+      document.getElementById('calc-rate-label').innerText = currentRate + '%';
+
+      const perDeal = (currentDealVal * currentRate) / 100;
+      const annual = perDeal * 3 * 12; // 3 deals per month
+
+      document.getElementById('calc-per-deal').innerText = formatInr(perDeal);
+      document.getElementById('calc-annual').innerText = formatInr(annual) + ' / yr';
+    }
+
+    function setCalcVal(val) {
+      document.getElementById('deal-slider').value = val;
+      updateCalc();
+    }
+
+    function setCalcRate(rate) {
+      currentRate = rate;
+      updateCalc();
+    }
+
+    // Demo Inquiry Form Submission Handler
+    function handleDemoSubmit(e) {
+      e.preventDefault();
+      const btn = document.getElementById('demo-btn');
+      const success = document.getElementById('demo-success');
+      btn.innerText = 'Submitting...';
+      btn.disabled = true;
+
+      // Simulate API call and confirmation
+      setTimeout(() => {
+        btn.parentElement.classList.add('hidden');
+        success.classList.remove('hidden');
+        lucide.createIcons();
+      }, 700);
+    }
+  </script>
+</body>
+</html>
