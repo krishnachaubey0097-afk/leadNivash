@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>leadNivash — Mobile & Web Interactive Preview</title>
+  <title>leadNivash — Complete Mobile & Desktop Preview</title>
   <link rel="icon" type="image/png" href="./frontend/public/logo-icon.png">
 
   <!-- Google Fonts: Inter & Plus Jakarta Sans -->
@@ -38,6 +38,7 @@
             gold: '#D97706',
             'gold-bg': '#FEF3C7',
             'gold-text': '#B45309',
+            danger: '#E11D48',
           },
           fontFamily: {
             sans: ['Inter', 'system-ui', 'sans-serif'],
@@ -69,16 +70,15 @@
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     
-    /* Device frame animations */
     .device-shell {
       transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
   </style>
 </head>
-<body class="bg-slate-900 text-slate-800 antialiased min-h-screen flex flex-col font-sans selection:bg-emerald-100 selection:text-emerald-800">
+<body class="bg-slate-950 text-slate-800 antialiased min-h-screen flex flex-col font-sans selection:bg-emerald-100 selection:text-emerald-800">
 
-  <!-- TOP DEVICE CONTROLS BAR -->
-  <header class="sticky top-0 z-50 bg-slate-950/90 backdrop-blur-md border-b border-slate-800 px-4 py-3 flex flex-wrap items-center justify-between gap-3 text-white">
+  <!-- TOP PREVIEW TOOLBAR -->
+  <header class="sticky top-0 z-50 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 px-4 py-2.5 flex flex-wrap items-center justify-between gap-3 text-white">
     <div class="flex items-center gap-3">
       <div class="w-8 h-8 rounded-xl bg-emerald-600/20 border border-emerald-500/40 p-1 flex items-center justify-center">
         <i data-lucide="home" class="w-4 h-4 text-emerald-400"></i>
@@ -86,47 +86,64 @@
       <div>
         <div class="flex items-center gap-1.5 font-heading font-black text-sm tracking-tight">
           <span>lead<span class="text-emerald-400">Nivash</span></span>
-          <span class="text-[10px] bg-emerald-950 text-emerald-400 px-2 py-0.5 rounded-full border border-emerald-800/60 font-mono">Mobile Preview</span>
+          <span class="text-[10px] bg-emerald-950 text-emerald-400 px-2 py-0.5 rounded-full border border-emerald-800/60 font-mono">Interactive Preview</span>
         </div>
-        <p class="text-[10px] text-slate-400">Independent Broker OS · Complete Frontend</p>
+        <p class="text-[10px] text-slate-400">Switch between Landing, Dashboard & Login</p>
       </div>
     </div>
 
-    <!-- View Mode Switcher -->
-    <div class="flex items-center gap-1.5 p-1 bg-slate-900 border border-slate-800 rounded-full text-xs font-semibold">
-      <button onclick="setDevice('mobile-sm')" id="btn-mobile-sm" class="px-3 py-1.5 rounded-full flex items-center gap-1.5 bg-emerald-600 text-white shadow-xs transition">
-        <i data-lucide="smartphone" class="w-3.5 h-3.5"></i>
-        <span>Mobile (375px)</span>
+    <!-- Screen Navigator (Landing vs Dashboard vs Login) -->
+    <div class="flex items-center gap-1.5 p-1 bg-slate-950 border border-slate-800 rounded-full text-xs font-bold">
+      <button onclick="switchScreen('landing')" id="screen-btn-landing" class="px-3 py-1.5 rounded-full flex items-center gap-1.5 bg-emerald-600 text-white shadow-xs transition cursor-pointer">
+        <i data-lucide="globe" class="w-3.5 h-3.5"></i>
+        <span>Landing Page</span>
       </button>
 
-      <button onclick="setDevice('mobile-lg')" id="btn-mobile-lg" class="px-3 py-1.5 rounded-full flex items-center gap-1.5 text-slate-400 hover:text-white transition">
-        <i data-lucide="tablet" class="w-3.5 h-3.5"></i>
-        <span>Android (412px)</span>
+      <button onclick="switchScreen('dashboard')" id="screen-btn-dashboard" class="px-3 py-1.5 rounded-full flex items-center gap-1.5 text-slate-400 hover:text-white transition cursor-pointer">
+        <i data-lucide="layout-dashboard" class="w-3.5 h-3.5"></i>
+        <span>Broker Dashboard</span>
       </button>
 
-      <button onclick="setDevice('full')" id="btn-full" class="px-3 py-1.5 rounded-full flex items-center gap-1.5 text-slate-400 hover:text-white transition">
-        <i data-lucide="monitor" class="w-3.5 h-3.5"></i>
-        <span>Full Web</span>
+      <button onclick="switchScreen('auth')" id="screen-btn-auth" class="px-3 py-1.5 rounded-full flex items-center gap-1.5 text-slate-400 hover:text-white transition cursor-pointer">
+        <i data-lucide="log-in" class="w-3.5 h-3.5"></i>
+        <span>Sign In / Register</span>
       </button>
     </div>
 
-    <!-- Right utility controls -->
+    <!-- Device Frame Width Controls -->
     <div class="flex items-center gap-2">
-      <button onclick="toggleTheme()" class="w-8 h-8 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-300 hover:text-white transition" title="Toggle Light/Dark Theme">
+      <div class="flex items-center gap-1 p-1 bg-slate-950 border border-slate-800 rounded-full text-xs font-semibold">
+        <button onclick="setDevice('mobile-sm')" id="btn-mobile-sm" class="px-2.5 py-1 rounded-full flex items-center gap-1 bg-slate-800 text-white transition" title="iPhone 375px">
+          <i data-lucide="smartphone" class="w-3.5 h-3.5"></i>
+          <span>375px</span>
+        </button>
+        <button onclick="setDevice('mobile-lg')" id="btn-mobile-lg" class="px-2.5 py-1 rounded-full flex items-center gap-1 text-slate-400 hover:text-white transition" title="Android 412px">
+          <i data-lucide="tablet" class="w-3.5 h-3.5"></i>
+          <span>412px</span>
+        </button>
+        <button onclick="setDevice('full')" id="btn-full" class="px-2.5 py-1 rounded-full flex items-center gap-1 text-slate-400 hover:text-white transition" title="Full Width">
+          <i data-lucide="monitor" class="w-3.5 h-3.5"></i>
+          <span>Full</span>
+        </button>
+      </div>
+
+      <!-- Theme Switcher -->
+      <button onclick="toggleTheme()" class="w-8 h-8 rounded-full bg-slate-950 border border-slate-800 flex items-center justify-center text-slate-300 hover:text-white transition cursor-pointer" title="Toggle Light/Dark Theme">
         <i data-lucide="moon" id="theme-icon" class="w-4 h-4"></i>
       </button>
-      <a href="http://localhost:5173" target="_blank" class="text-xs bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-full text-slate-200 flex items-center gap-1 transition">
-        <span>Open Vite Server</span>
+
+      <a href="http://localhost:5173" target="_blank" class="hidden sm:flex text-xs bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-full text-slate-200 items-center gap-1 transition">
+        <span>Vite Dev</span>
         <i data-lucide="external-link" class="w-3 h-3"></i>
       </a>
     </div>
   </header>
 
-  <!-- DEVICE STAGE CONTAINER -->
-  <main class="flex-1 flex items-start justify-center p-3 sm:p-6 overflow-y-auto">
-    <div id="device-wrapper" class="device-shell w-[375px] bg-white dark:bg-[#0B0F17] rounded-[36px] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.6)] border-[8px] border-slate-800 overflow-hidden flex flex-col relative transition-all duration-300">
+  <!-- DEVICE FRAME CONTAINER -->
+  <main class="flex-1 flex items-start justify-center p-2 sm:p-6 overflow-y-auto">
+    <div id="device-wrapper" class="device-shell w-[375px] bg-white dark:bg-[#0B0F17] rounded-[36px] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.7)] border-[8px] border-slate-800 overflow-hidden flex flex-col relative transition-all duration-300">
       
-      <!-- Mobile Status Bar (Simulated) -->
+      <!-- Simulated Mobile Status Bar -->
       <div id="status-bar" class="w-full bg-white dark:bg-[#0B0F17] text-slate-800 dark:text-slate-200 px-6 pt-3 pb-1 flex items-center justify-between text-[11px] font-semibold border-b border-slate-100 dark:border-slate-800/80 select-none">
         <span>9:41</span>
         <div class="w-20 h-4 bg-slate-800 rounded-full mx-auto"></div>
@@ -136,12 +153,12 @@
         </div>
       </div>
 
-      <!-- SCROLLABLE APP CONTENT -->
-      <div class="flex-1 overflow-y-auto bg-slate-50 dark:bg-[#0B0F17] text-slate-700 dark:text-slate-300">
+      <!-- ======================================================== -->
+      <!-- SCREEN 1: PUBLIC MARKETING LANDING PAGE                  -->
+      <!-- ======================================================== -->
+      <div id="view-landing" class="flex-1 overflow-y-auto bg-slate-50 dark:bg-[#0B0F17] text-slate-700 dark:text-slate-300">
         
-        <!-- ============================================== -->
-        <!-- SECTION 1: HEADER & HERO                      -->
-        <!-- ============================================== -->
+        <!-- Header with Free Demo & Dashboard Buttons -->
         <header class="sticky top-0 z-40 bg-white/90 dark:bg-[#0B0F17]/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 h-14 flex items-center justify-between">
           <div class="flex items-center gap-2">
             <div class="w-7 h-7 rounded-lg bg-white border border-slate-200 p-1 shadow-xs">
@@ -152,9 +169,17 @@
             </span>
           </div>
 
-          <a href="#inquiry-form" class="px-3 py-1 rounded-full bg-emerald-700 text-white text-[11px] font-bold shadow-xs">
-            Free Demo
-          </a>
+          <div class="flex items-center gap-1.5">
+            <!-- DASHBOARD SWITCHER BUTTON AS REQUESTED -->
+            <button onclick="switchScreen('dashboard')" class="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:text-emerald-600 text-[11px] font-bold border border-slate-200 dark:border-slate-700 flex items-center gap-1 transition cursor-pointer">
+              <i data-lucide="layout-dashboard" class="w-3 h-3 text-emerald-600"></i>
+              <span>Dashboard</span>
+            </button>
+
+            <a href="#inquiry-form" class="px-3 py-1 rounded-full bg-emerald-700 text-white text-[11px] font-bold shadow-xs">
+              Demo
+            </a>
+          </div>
         </header>
 
         <!-- Hero Content -->
@@ -173,18 +198,20 @@
             Turn scattered WhatsApp enquiries into an organised property business. Save time, find the right matches faster, and manage deals without leaking owner contacts.
           </p>
 
-          <div class="flex flex-col gap-2.5 pt-2 max-w-xs mx-auto">
-            <a href="#inquiry-form" class="w-full py-3 px-4 rounded-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-emerald-700/20">
-              <span>Get Free Demo</span>
+          <div class="flex flex-col gap-2 pt-2 max-w-xs mx-auto">
+            <!-- Direct CTA into Dashboard Preview -->
+            <button onclick="switchScreen('dashboard')" class="w-full py-3 px-4 rounded-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-emerald-700/20 cursor-pointer">
+              <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+              <span>Open Broker Dashboard</span>
               <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
-            </a>
+            </button>
 
-            <a href="./frontend/dist/index.html#/register" class="w-full py-3 px-4 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold text-xs flex items-center justify-center">
-              Start 14-Day Free Trial
+            <a href="#inquiry-form" class="w-full py-3 px-4 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold text-xs flex items-center justify-center">
+              Request Free Demo
             </a>
           </div>
 
-          <!-- Product preview card (Smudge / Orion style) -->
+          <!-- Product Preview Card -->
           <div class="pt-4 text-left">
             <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
               <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800 text-[10px] font-bold">
@@ -210,9 +237,7 @@
           </div>
         </section>
 
-        <!-- ============================================== -->
-        <!-- SECTION 2: PURPOSE-BUILT FOR AGENTS           -->
-        <!-- ============================================== -->
+        <!-- Purpose-Built for Agents -->
         <section class="p-5 bg-white dark:bg-slate-900/60 border-y border-slate-200 dark:border-slate-800 space-y-4">
           <div class="text-center space-y-1">
             <span class="text-[10px] font-black uppercase tracking-widest text-emerald-700">PURPOSE-BUILT FOR AGENTS</span>
@@ -231,104 +256,15 @@
               /assets/videos/leadnivash-mobile-demo.mp4
             </span>
           </div>
-
-          <!-- 6 Capabilities Grid -->
-          <div class="grid grid-cols-2 gap-2 text-left pt-2">
-            <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-1">
-              <i data-lucide="building" class="w-4 h-4 text-emerald-600"></i>
-              <h5 class="text-[11px] font-bold text-slate-900 dark:text-white">Smart Inventory</h5>
-              <p class="text-[10px] text-slate-500">Centralised listings</p>
-            </div>
-            <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-1">
-              <i data-lucide="users" class="w-4 h-4 text-emerald-600"></i>
-              <h5 class="text-[11px] font-bold text-slate-900 dark:text-white">Buyer Pipeline</h5>
-              <p class="text-[10px] text-slate-500">Budgets & locations</p>
-            </div>
-            <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-1">
-              <i data-lucide="message-square" class="w-4 h-4 text-emerald-600"></i>
-              <h5 class="text-[11px] font-bold text-slate-900 dark:text-white">WhatsApp AI</h5>
-              <p class="text-[10px] text-slate-500">1-tap chat parsing</p>
-            </div>
-            <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-1">
-              <i data-lucide="sparkles" class="w-4 h-4 text-emerald-600"></i>
-              <h5 class="text-[11px] font-bold text-slate-900 dark:text-white">Auto-Matching</h5>
-              <p class="text-[10px] text-slate-500">Score percentages</p>
-            </div>
-            <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-1">
-              <i data-lucide="share-2" class="w-4 h-4 text-emerald-600"></i>
-              <h5 class="text-[11px] font-bold text-slate-900 dark:text-white">Masked Flyers</h5>
-              <p class="text-[10px] text-slate-500">Zero contact leaks</p>
-            </div>
-            <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-1">
-              <i data-lucide="trending-up" class="w-4 h-4 text-emerald-600"></i>
-              <h5 class="text-[11px] font-bold text-slate-900 dark:text-white">Deal Tracking</h5>
-              <p class="text-[10px] text-slate-500">Brokerage records</p>
-            </div>
-          </div>
         </section>
 
-        <!-- ============================================== -->
-        <!-- SECTION 3: HOW IT WORKS (5 STEPS)              -->
-        <!-- ============================================== -->
-        <section class="p-5 space-y-4">
-          <div class="text-center space-y-1">
-            <span class="text-[10px] font-black uppercase tracking-widest text-emerald-700">SIMPLE WORKFLOW</span>
-            <h2 class="text-xl font-black text-slate-900 dark:text-white font-heading">From WhatsApp Message to Property Deal.</h2>
-          </div>
-
-          <div class="space-y-2.5 text-left">
-            <div class="p-3.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-1">
-              <div class="flex items-center gap-2">
-                <span class="w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 font-bold text-[10px] flex items-center justify-center">1</span>
-                <h4 class="text-xs font-bold text-slate-900 dark:text-white">Paste a Message</h4>
-              </div>
-              <p class="text-[11px] text-slate-500 pl-7">Copy raw requirement or listing text directly from WhatsApp.</p>
-            </div>
-
-            <div class="p-3.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-1">
-              <div class="flex items-center gap-2">
-                <span class="w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 font-bold text-[10px] flex items-center justify-center">2</span>
-                <h4 class="text-xs font-bold text-slate-900 dark:text-white">AI Understands It</h4>
-              </div>
-              <p class="text-[11px] text-slate-500 pl-7">Extracts name, budget, BHK, locality, area, and contact details.</p>
-            </div>
-
-            <div class="p-3.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-1">
-              <div class="flex items-center gap-2">
-                <span class="w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 font-bold text-[10px] flex items-center justify-center">3</span>
-                <h4 class="text-xs font-bold text-slate-900 dark:text-white">Save and Organise</h4>
-              </div>
-              <p class="text-[11px] text-slate-500 pl-7">Review fields, make adjustments, and save to your central inventory.</p>
-            </div>
-
-            <div class="p-3.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-1">
-              <div class="flex items-center gap-2">
-                <span class="w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 font-bold text-[10px] flex items-center justify-center">4</span>
-                <h4 class="text-xs font-bold text-slate-900 dark:text-white">Find Property Matches</h4>
-              </div>
-              <p class="text-[11px] text-slate-500 pl-7">Compares buyer criteria against available properties with match scores.</p>
-            </div>
-
-            <div class="p-3.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-1">
-              <div class="flex items-center gap-2">
-                <span class="w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 font-bold text-[10px] flex items-center justify-center">5</span>
-                <h4 class="text-xs font-bold text-slate-900 dark:text-white">Share and Track</h4>
-              </div>
-              <p class="text-[11px] text-slate-500 pl-7">Send branded masked flyer via WhatsApp and track deal stages.</p>
-            </div>
-          </div>
-        </section>
-
-        <!-- ============================================== -->
-        <!-- SECTION 4: FINANCIAL IMPACT & ROI CALCULATOR  -->
-        <!-- ============================================== -->
-        <section class="p-5 bg-white dark:bg-slate-900/60 border-y border-slate-200 dark:border-slate-800 space-y-4">
+        <!-- ROI Calculator -->
+        <section class="p-5 bg-white dark:bg-slate-900/60 border-y border-slate-200 dark:border-slate-800 space-y-3">
           <div class="text-center space-y-1">
             <span class="text-[10px] font-black uppercase tracking-widest text-amber-600">FINANCIAL IMPACT</span>
             <h2 class="text-xl font-black text-slate-900 dark:text-white font-heading">Your Next Deal Could Be Worth More Than You Think.</h2>
           </div>
 
-          <!-- Interactive Calculator Card -->
           <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-4 text-left">
             <div>
               <div class="flex justify-between text-xs font-bold mb-1">
@@ -336,26 +272,8 @@
                 <span class="text-emerald-700 font-extrabold" id="calc-val-label">₹75,00,000</span>
               </div>
               <input type="range" id="deal-slider" min="2000000" max="30000000" step="500000" value="7500000" oninput="updateCalc()" class="w-full accent-emerald-700 cursor-pointer">
-              <div class="flex gap-2 pt-1.5">
-                <button onclick="setCalcVal(4500000)" class="px-2 py-0.5 rounded-full bg-white dark:bg-slate-700 text-[10px] font-semibold border border-slate-200">₹45L</button>
-                <button onclick="setCalcVal(7500000)" class="px-2 py-0.5 rounded-full bg-emerald-700 text-white text-[10px] font-semibold">₹75L</button>
-                <button onclick="setCalcVal(15000000)" class="px-2 py-0.5 rounded-full bg-white dark:bg-slate-700 text-[10px] font-semibold border border-slate-200">₹1.5Cr</button>
-              </div>
             </div>
 
-            <div>
-              <div class="flex justify-between text-xs font-bold mb-1">
-                <span class="text-slate-700 dark:text-slate-300">Commission Rate</span>
-                <span class="text-amber-600 font-extrabold" id="calc-rate-label">1.5%</span>
-              </div>
-              <div class="flex gap-2">
-                <button onclick="setCalcRate(1.0)" class="flex-1 py-1 rounded-lg bg-white dark:bg-slate-700 text-xs font-bold border border-slate-200">1.0%</button>
-                <button onclick="setCalcRate(1.5)" class="flex-1 py-1 rounded-lg bg-amber-600 text-white text-xs font-bold">1.5%</button>
-                <button onclick="setCalcRate(2.0)" class="flex-1 py-1 rounded-lg bg-white dark:bg-slate-700 text-xs font-bold border border-slate-200">2.0%</button>
-              </div>
-            </div>
-
-            <!-- Output Box -->
             <div class="p-3.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-center space-y-1">
               <span class="text-[10px] uppercase font-bold text-slate-500">Commission Per Deal</span>
               <span class="text-2xl font-black text-emerald-700 dark:text-emerald-400 font-heading block" id="calc-per-deal">₹1,12,500</span>
@@ -364,9 +282,7 @@
           </div>
         </section>
 
-        <!-- ============================================== -->
-        <!-- SECTION 5: PRICING                             -->
-        <!-- ============================================== -->
+        <!-- Pricing Section -->
         <section class="p-5 space-y-4">
           <div class="text-center space-y-1">
             <span class="text-[10px] font-black uppercase tracking-widest text-emerald-700">TRANSPARENT INVESTMENT</span>
@@ -379,7 +295,7 @@
               <span class="text-[10px] font-bold uppercase text-slate-400">Starter Pilot</span>
               <h3 class="text-xl font-black text-slate-900 dark:text-white font-heading">₹0 <span class="text-xs font-normal text-slate-400">/ 14 Days</span></h3>
               <p class="text-xs text-slate-500">Up to 15 properties, 10 active buyers, and WhatsApp Analyzer.</p>
-              <button class="w-full py-2.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold text-xs">
+              <button onclick="switchScreen('auth')" class="w-full py-2.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold text-xs cursor-pointer">
                 Start Free Trial
               </button>
             </div>
@@ -391,50 +307,14 @@
               <h3 class="text-xl font-black text-slate-900 dark:text-white font-heading">₹3,999 <span class="text-xs font-normal text-slate-400">/ Year</span></h3>
               <span class="text-[10px] text-emerald-600 font-semibold block -mt-1">(~₹333 / month)</span>
               <p class="text-xs text-slate-500">Unlimited properties, buyer management, multi-image brochures & custom watermark branding.</p>
-              <button class="w-full py-2.5 rounded-full bg-emerald-700 text-white font-bold text-xs shadow-xs">
+              <button onclick="switchScreen('auth')" class="w-full py-2.5 rounded-full bg-emerald-700 text-white font-bold text-xs shadow-xs cursor-pointer">
                 Get Started
               </button>
             </div>
           </div>
         </section>
 
-        <!-- ============================================== -->
-        <!-- SECTION 6: WHY CHOOSE leadNivash              -->
-        <!-- ============================================== -->
-        <section class="p-5 bg-white dark:bg-slate-900/60 border-y border-slate-200 dark:border-slate-800 space-y-3 text-left">
-          <div class="text-center space-y-1 pb-1">
-            <span class="text-[10px] font-black uppercase tracking-widest text-emerald-700">WHY leadNivash</span>
-            <h2 class="text-xl font-black text-slate-900 dark:text-white font-heading">Built Around the Way Property Brokers Actually Work.</h2>
-          </div>
-
-          <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-1">
-            <h4 class="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
-              <i data-lucide="search" class="w-4 h-4 text-emerald-600"></i>
-              <span>Never Lose a Match</span>
-            </h4>
-            <p class="text-[11px] text-slate-500">Your buyer requirements and inventory stay organised. Find relevant matches without digging through old chats.</p>
-          </div>
-
-          <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-1">
-            <h4 class="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
-              <i data-lucide="shield-check" class="w-4 h-4 text-amber-600"></i>
-              <span>Protect Business Relationships</span>
-            </h4>
-            <p class="text-[11px] text-slate-500">Share professional property flyers without exposing confidential owner contacts. Keep your agency identity on materials.</p>
-          </div>
-
-          <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-1">
-            <h4 class="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
-              <i data-lucide="briefcase" class="w-4 h-4 text-blue-600"></i>
-              <span>Manage More, Work Smarter</span>
-            </h4>
-            <p class="text-[11px] text-slate-500">Save time on manual data entry, organise buyers, and track deal stages and commissions from one workspace.</p>
-          </div>
-        </section>
-
-        <!-- ============================================== -->
-        <!-- SECTION 7: DEMO INQUIRY FORM                  -->
-        <!-- ============================================== -->
+        <!-- Demo Inquiry Form -->
         <section id="inquiry-form" class="p-5 space-y-4 text-left">
           <div class="p-5 rounded-2xl bg-gradient-to-br from-slate-950 to-emerald-950 text-white space-y-3 border border-slate-800 shadow-xl">
             <h3 class="text-lg font-black font-heading leading-tight">Ready to Turn Your Enquiries into Deals?</h3>
@@ -446,7 +326,7 @@
               <input type="text" id="demo-agency" required placeholder="Agency / Business Name *" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-emerald-500">
               <input type="text" id="demo-city" required placeholder="City (e.g. Panipat / Gurugram) *" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-emerald-500">
               
-              <button type="submit" id="demo-btn" class="w-full py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-1 shadow-md">
+              <button type="submit" id="demo-btn" class="w-full py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-1 shadow-md cursor-pointer">
                 <span>Request My Free Demo</span>
                 <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
               </button>
@@ -460,42 +340,331 @@
           </div>
         </section>
 
-        <!-- ============================================== -->
-        <!-- SECTION 8: FOOTER                             -->
-        <!-- ============================================== -->
-        <footer class="p-5 border-t border-slate-200 dark:border-slate-800 text-[11px] text-slate-500 space-y-2 text-center">
-          <div class="flex items-center justify-center gap-2">
-            <img src="./frontend/public/logo-icon.png" alt="leadNivash" class="w-5 h-5 object-contain">
-            <span class="font-bold text-slate-900 dark:text-white">lead<span class="text-emerald-600">Nivash</span></span>
+      </div>
+
+      <!-- ======================================================== -->
+      <!-- SCREEN 2: AUTHENTICATED BROKER DASHBOARD                 -->
+      <!-- ======================================================== -->
+      <div id="view-dashboard" class="hidden flex-1 overflow-y-auto bg-slate-50 dark:bg-[#0B0F17] text-slate-700 dark:text-slate-300">
+        
+        <!-- Dashboard Top Header (Quixotic style) -->
+        <header class="sticky top-0 z-40 bg-white/90 dark:bg-[#0B0F17]/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 h-14 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-lg bg-white border border-slate-200 p-1 shadow-xs">
+              <img src="./frontend/public/logo-icon.png" alt="leadNivash" class="w-full h-full object-contain">
+            </div>
+            <div>
+              <h2 class="text-xs font-black text-slate-900 dark:text-white font-heading leading-tight" id="dash-header-title">Today's Workspace</h2>
+              <span class="text-[9px] text-emerald-600 font-bold flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                Live Sync Active
+              </span>
+            </div>
           </div>
-          <p>© 2026 leadNivash. All rights reserved.</p>
-          <p>Designed with care for Indian property brokers.</p>
-        </footer>
+
+          <div class="flex items-center gap-2">
+            <button class="relative w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300">
+              <i data-lucide="bell" class="w-4 h-4"></i>
+              <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-emerald-600"></span>
+            </button>
+            <div class="w-8 h-8 rounded-full bg-emerald-700 text-white font-black text-xs flex items-center justify-center shadow-xs">
+              RS
+            </div>
+          </div>
+        </header>
+
+        <!-- Main Dashboard Body -->
+        <div class="p-4 space-y-4 text-left">
+          
+          <!-- Segmented Control (Today vs Track Record per PRD §5.3) -->
+          <div class="flex p-1 bg-slate-200/70 dark:bg-slate-800/80 rounded-full border border-slate-200 dark:border-slate-700 max-w-xs mx-auto w-full">
+            <button onclick="setDashSegment('today')" id="dash-tab-today" class="flex-1 py-1 text-xs font-bold rounded-full bg-emerald-700 text-white shadow-xs transition cursor-pointer">
+              Today
+            </button>
+            <button onclick="setDashSegment('track-record')" id="dash-tab-track" class="flex-1 py-1 text-xs font-bold rounded-full text-slate-500 hover:text-slate-900 dark:hover:text-white transition cursor-pointer">
+              Track Record
+            </button>
+          </div>
+
+          <!-- SUB-VIEW A: TODAY -->
+          <div id="subview-today" class="space-y-4">
+            
+            <!-- Greeting & Quick Paste Hero Card -->
+            <div class="p-4 rounded-2xl bg-gradient-to-br from-white via-white to-emerald-50/40 dark:from-slate-900 dark:via-slate-900 dark:to-emerald-950/20 border border-emerald-500/30 shadow-card space-y-3">
+              <div class="flex items-center justify-between">
+                <div>
+                  <span class="text-[10px] font-black uppercase tracking-wider text-emerald-700 dark:text-emerald-400">Wednesday, 18 Nov</span>
+                  <h3 class="text-base font-black text-slate-900 dark:text-white font-heading">Welcome back, Rajesh Sharma 👋</h3>
+                  <p class="text-[11px] text-slate-500">Sharma Real Estate Agency · Panipat, NCR</p>
+                </div>
+              </div>
+
+              <!-- Quick Paste Interactive Bar -->
+              <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-xs space-y-2">
+                <div class="flex items-center gap-1.5 text-emerald-700 dark:text-emerald-400 font-bold text-[11px]">
+                  <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+                  <span>WhatsApp Message Paste & AI Extraction:</span>
+                </div>
+                <div class="flex gap-1.5">
+                  <input type="text" id="paste-input" value="3 BHK Model Town 200 gaj demand 1.25 Cr urgent sale" class="flex-1 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-600 rounded-lg px-2.5 py-1.5 text-xs text-slate-800 dark:text-slate-200 focus:outline-none">
+                  <button onclick="simulateExtraction()" class="px-3 py-1.5 rounded-lg bg-emerald-700 text-white font-bold text-xs hover:bg-emerald-800 cursor-pointer">
+                    Extract
+                  </button>
+                </div>
+                <!-- Extraction result badge -->
+                <div id="paste-result" class="p-2 rounded-lg bg-emerald-100/70 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 text-[10px] font-semibold flex items-center justify-between">
+                  <span>Extracted: 3 BHK · 200 Gaj · Model Town · ₹1.25 Cr</span>
+                  <span class="bg-emerald-700 text-white px-2 py-0.5 rounded-full font-bold">1 Match Found</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 4 Financial & Operational Stat Cards (Quixotic Style) -->
+            <div class="grid grid-cols-2 gap-2.5">
+              <!-- Card 1 -->
+              <div class="p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-1">
+                <div class="flex items-center justify-between">
+                  <span class="text-[10px] font-bold text-slate-400 uppercase">Listings</span>
+                  <div class="w-6 h-6 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500">
+                    <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
+                  </div>
+                </div>
+                <span class="text-xl font-black text-slate-900 dark:text-white font-heading block">24</span>
+                <span class="inline-block text-[9px] font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-1.5 py-0.5 rounded-full">
+                  +14% this month
+                </span>
+              </div>
+
+              <!-- Card 2 -->
+              <div class="p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-1">
+                <div class="flex items-center justify-between">
+                  <span class="text-[10px] font-bold text-slate-400 uppercase">Active Buyers</span>
+                  <div class="w-6 h-6 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500">
+                    <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
+                  </div>
+                </div>
+                <span class="text-xl font-black text-slate-900 dark:text-white font-heading block">18</span>
+                <span class="inline-block text-[9px] font-bold text-blue-600 bg-blue-50 dark:bg-blue-950/60 px-1.5 py-0.5 rounded-full">
+                  +4 qualified
+                </span>
+              </div>
+
+              <!-- Card 3 -->
+              <div class="p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-1">
+                <div class="flex items-center justify-between">
+                  <span class="text-[10px] font-bold text-slate-400 uppercase">Matches Waiting</span>
+                  <div class="w-6 h-6 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500">
+                    <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
+                  </div>
+                </div>
+                <span class="text-xl font-black text-emerald-600 font-heading block">9</span>
+                <span class="inline-block text-[9px] font-bold text-emerald-700 bg-emerald-50 dark:bg-emerald-950/60 px-1.5 py-0.5 rounded-full">
+                  85%+ score
+                </span>
+              </div>
+
+              <!-- Card 4 -->
+              <div class="p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-1">
+                <div class="flex items-center justify-between">
+                  <span class="text-[10px] font-bold text-slate-400 uppercase">Pipeline Value</span>
+                  <div class="w-6 h-6 rounded-full bg-amber-50 dark:bg-amber-950/60 flex items-center justify-center text-amber-600">
+                    <i data-lucide="trophy" class="w-3.5 h-3.5"></i>
+                  </div>
+                </div>
+                <span class="text-xl font-black text-amber-600 font-heading block">₹3.4L</span>
+                <span class="inline-block text-[9px] font-bold text-amber-700 bg-amber-50 dark:bg-amber-950/60 px-1.5 py-0.5 rounded-full">
+                  1% avg broker fee
+                </span>
+              </div>
+            </div>
+
+            <!-- Deal Engagement Bar Chart (Quixotic style) -->
+            <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-3">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h4 class="text-xs font-bold text-slate-900 dark:text-white">Deal Engagement & Matches</h4>
+                  <p class="text-[10px] text-slate-400">Monthly closing trajectory</p>
+                </div>
+                <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-full">+17.8% Growth</span>
+              </div>
+
+              <!-- CSS Bars -->
+              <div class="h-28 pt-4 flex items-end justify-between gap-2 px-1">
+                <div class="flex-1 flex flex-col items-center gap-1 h-full justify-end">
+                  <div class="w-full bg-emerald-100 dark:bg-emerald-950/40 rounded-t-lg h-[40%]"></div>
+                  <span class="text-[9px] text-slate-400">Jan</span>
+                </div>
+                <div class="flex-1 flex flex-col items-center gap-1 h-full justify-end">
+                  <div class="w-full bg-emerald-100 dark:bg-emerald-950/40 rounded-t-lg h-[60%]"></div>
+                  <span class="text-[9px] text-slate-400">Feb</span>
+                </div>
+                <div class="flex-1 flex flex-col items-center gap-1 h-full justify-end">
+                  <div class="w-full bg-emerald-100 dark:bg-emerald-950/40 rounded-t-lg h-[50%]"></div>
+                  <span class="text-[9px] text-slate-400">Mar</span>
+                </div>
+                <div class="flex-1 flex flex-col items-center gap-1 h-full justify-end">
+                  <span class="text-[8px] font-bold bg-emerald-700 text-white px-1 rounded-full">+17.8%</span>
+                  <div class="w-full bg-gradient-to-t from-emerald-700 to-emerald-500 rounded-t-lg h-[90%] shadow-sm"></div>
+                  <span class="text-[9px] font-bold text-emerald-700">Apr</span>
+                </div>
+                <div class="flex-1 flex flex-col items-center gap-1 h-full justify-end">
+                  <div class="w-full bg-emerald-100 dark:bg-emerald-950/40 rounded-t-lg h-[65%]"></div>
+                  <span class="text-[9px] text-slate-400">May</span>
+                </div>
+                <div class="flex-1 flex flex-col items-center gap-1 h-full justify-end">
+                  <div class="w-full bg-emerald-100 dark:bg-emerald-950/40 rounded-t-lg h-[75%]"></div>
+                  <span class="text-[9px] text-slate-400">Jun</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- High-Priority Matches Waiting -->
+            <div class="space-y-2">
+              <div class="flex items-center justify-between">
+                <h4 class="text-xs font-bold text-slate-900 dark:text-white">High-Priority Matches Waiting</h4>
+                <span class="text-[10px] text-emerald-700 font-bold">2 Ready Today</span>
+              </div>
+
+              <!-- Match Card 1 -->
+              <div class="p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
+                    96% Perfect Match
+                  </span>
+                  <span class="text-[10px] text-slate-400">11:30 AM Today</span>
+                </div>
+                <div>
+                  <h5 class="text-xs font-bold text-slate-900 dark:text-white">3 BHK Luxury Builder Floor</h5>
+                  <p class="text-[11px] text-slate-500">Model Town, Panipat · ₹1.25 Cr</p>
+                </div>
+                <div class="p-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex justify-between text-[11px]">
+                  <span>Lead: <strong>Rajesh Sharma</strong></span>
+                  <span class="text-slate-500">Budget: ₹1.2 - 1.35 Cr</span>
+                </div>
+                <div class="flex gap-2 pt-1">
+                  <a href="https://wa.me/?text=Hello!%20Here%20is%20a%203%20BHK%20Builder%20Floor%20in%20Model%20Town%20Panipat." target="_blank" class="flex-1 py-1.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] flex items-center justify-center gap-1 shadow-xs">
+                    <i data-lucide="send" class="w-3 h-3"></i>
+                    <span>Share on WhatsApp</span>
+                  </a>
+                  <button class="px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 font-bold text-[11px]">
+                    Flyer
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- SUB-VIEW B: TRACK RECORD -->
+          <div id="subview-track" class="hidden space-y-3">
+            <!-- Tabs -->
+            <div class="flex gap-1.5 overflow-x-auto no-scrollbar py-1">
+              <button onclick="setTrackTab('active')" id="trk-active" class="px-3 py-1 rounded-full text-[10px] font-bold bg-emerald-700 text-white shadow-xs">Active Deals</button>
+              <button onclick="setTrackTab('wins')" id="trk-wins" class="px-3 py-1 rounded-full text-[10px] font-bold bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600">Wins 🏆</button>
+              <button onclick="setTrackTab('lost')" id="trk-lost" class="px-3 py-1 rounded-full text-[10px] font-bold bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600">Lost Deals</button>
+              <button onclick="setTrackTab('deleted')" id="trk-deleted" class="px-3 py-1 rounded-full text-[10px] font-bold bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600">Trash (30d)</button>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-3">
+              <div id="track-content-active" class="space-y-2">
+                <h4 class="text-xs font-bold text-slate-900 dark:text-white">Active Pipeline Stages (Kanban)</h4>
+                <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-1">
+                  <span class="text-[9px] font-bold text-emerald-700 uppercase">Site Visit Scheduled</span>
+                  <p class="text-xs font-bold">250 Gaj Plot, Ansals Sushant City</p>
+                  <p class="text-[10px] text-slate-500">Buyer: Vikram Verma · Deal Value: ₹85 Lakhs</p>
+                </div>
+                <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-1">
+                  <span class="text-[9px] font-bold text-blue-600 uppercase">Under Negotiation</span>
+                  <p class="text-xs font-bold">Sector 12 Retail Shop</p>
+                  <p class="text-[10px] text-slate-500">Client: Sharma Jewellers · Rent: ₹45,000/mo</p>
+                </div>
+              </div>
+
+              <div id="track-content-wins" class="hidden space-y-2">
+                <h4 class="text-xs font-bold text-slate-900 dark:text-white">Wins & Commission Collected</h4>
+                <div class="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900 text-xs">
+                  <div class="flex justify-between font-bold text-slate-900 dark:text-white">
+                    <span>3 BHK Model Town Floor</span>
+                    <span class="text-amber-700 font-extrabold">₹1,25,000 Earned</span>
+                  </div>
+                  <p class="text-[10px] text-slate-500 mt-1">Closed in 18 days · Full 1% brokerage collected</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
 
       </div>
 
-      <!-- BOTTOM MOBILE TAB BAR (Simulated PWA Navigation) -->
-      <nav class="w-full bg-white dark:bg-[#0B0F17] border-t border-slate-200 dark:border-slate-800 px-4 py-2 flex items-center justify-between text-[10px] font-bold">
-        <a href="#hero" class="flex flex-col items-center text-emerald-700 dark:text-emerald-400">
+      <!-- ======================================================== -->
+      <!-- SCREEN 3: AUTHENTICATION (SIGN IN / REGISTER)             -->
+      <!-- ======================================================== -->
+      <div id="view-auth" class="hidden flex-1 overflow-y-auto bg-slate-50 dark:bg-[#0B0F17] p-5 text-left space-y-4">
+        <div class="flex items-center gap-2 pt-2">
+          <button onclick="switchScreen('landing')" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 cursor-pointer">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i>
+          </button>
+          <span class="text-xs font-bold text-slate-500">Back to Landing Page</span>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
+          <div class="text-center space-y-1">
+            <h3 class="text-lg font-black font-heading text-slate-900 dark:text-white">Broker Sign In</h3>
+            <p class="text-xs text-slate-500">Access your property inventory and buyer matches</p>
+          </div>
+
+          <form onsubmit="handleLoginSubmit(event)" class="space-y-3 pt-2">
+            <div>
+              <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Email Address</label>
+              <input type="email" id="login-email" value="broker@leadnivash.com" required class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-500">
+            </div>
+
+            <div>
+              <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Password</label>
+              <input type="password" value="••••••••••••" required class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-500">
+            </div>
+
+            <button type="submit" class="w-full py-2.5 rounded-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-xs cursor-pointer">
+              <span>Sign In to Broker OS</span>
+              <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </button>
+          </form>
+
+          <div class="pt-3 border-t border-slate-100 dark:border-slate-800 text-center">
+            <p class="text-[11px] text-slate-500">
+              Need an account? <span onclick="alert('Registration is active in live app!')" class="text-emerald-700 font-bold cursor-pointer underline">Register 14-day trial</span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- BOTTOM MOBILE TAB BAR -->
+      <nav id="mobile-nav" class="w-full bg-white dark:bg-[#0B0F17] border-t border-slate-200 dark:border-slate-800 px-4 py-2 flex items-center justify-between text-[10px] font-bold select-none">
+        <button onclick="switchScreen('landing')" id="nav-btn-home" class="flex flex-col items-center text-emerald-700 dark:text-emerald-400 cursor-pointer">
+          <i data-lucide="globe" class="w-4 h-4 mb-0.5"></i>
+          <span>Landing</span>
+        </button>
+
+        <button onclick="switchScreen('dashboard'); setDashSegment('today')" id="nav-btn-dash" class="flex flex-col items-center text-slate-400 hover:text-slate-800 dark:hover:text-white cursor-pointer">
           <i data-lucide="layout-dashboard" class="w-4 h-4 mb-0.5"></i>
-          <span>Home</span>
-        </a>
-        <a href="#capabilities" class="flex flex-col items-center text-slate-400 hover:text-slate-800">
-          <i data-lucide="building" class="w-4 h-4 mb-0.5"></i>
-          <span>Features</span>
-        </a>
-        <!-- Raised Center Button -->
-        <a href="#inquiry-form" class="-mt-5 w-11 h-11 rounded-full bg-emerald-700 text-white flex items-center justify-center shadow-md">
+          <span>Dashboard</span>
+        </button>
+
+        <!-- Raised Center ＋ Paste Action -->
+        <button onclick="switchScreen('dashboard'); setDashSegment('today'); document.getElementById('paste-input').focus()" class="-mt-5 w-11 h-11 rounded-full bg-emerald-700 hover:bg-emerald-800 text-white flex items-center justify-center shadow-lg shadow-emerald-700/30 cursor-pointer">
           <i data-lucide="plus" class="w-5 h-5"></i>
-        </a>
-        <a href="#financial-impact" class="flex flex-col items-center text-slate-400 hover:text-slate-800">
-          <i data-lucide="calculator" class="w-4 h-4 mb-0.5"></i>
-          <span>ROI</span>
-        </a>
-        <a href="#pricing" class="flex flex-col items-center text-slate-400 hover:text-slate-800">
-          <i data-lucide="tag" class="w-4 h-4 mb-0.5"></i>
-          <span>Pricing</span>
-        </a>
+        </button>
+
+        <button onclick="switchScreen('dashboard'); setDashSegment('track-record')" id="nav-btn-track" class="flex flex-col items-center text-slate-400 hover:text-slate-800 dark:hover:text-white cursor-pointer">
+          <i data-lucide="trophy" class="w-4 h-4 mb-0.5"></i>
+          <span>Track</span>
+        </button>
+
+        <button onclick="switchScreen('auth')" id="nav-btn-auth" class="flex flex-col items-center text-slate-400 hover:text-slate-800 dark:hover:text-white cursor-pointer">
+          <i data-lucide="user" class="w-4 h-4 mb-0.5"></i>
+          <span>Account</span>
+        </button>
       </nav>
 
     </div>
@@ -506,7 +675,99 @@
     // Initialize Lucide icons
     lucide.createIcons();
 
-    // Device shell switcher
+    // Screen Switching: 'landing' | 'dashboard' | 'auth'
+    function switchScreen(screen) {
+      const vLanding = document.getElementById('view-landing');
+      const vDashboard = document.getElementById('view-dashboard');
+      const vAuth = document.getElementById('view-auth');
+
+      const btnLanding = document.getElementById('screen-btn-landing');
+      const btnDashboard = document.getElementById('screen-btn-dashboard');
+      const btnAuth = document.getElementById('screen-btn-auth');
+
+      const navHome = document.getElementById('nav-btn-home');
+      const navDash = document.getElementById('nav-btn-dash');
+      const navTrack = document.getElementById('nav-btn-track');
+      const navAuth = document.getElementById('nav-btn-auth');
+
+      // Reset Top Header Screen Buttons
+      [btnLanding, btnDashboard, btnAuth].forEach(b => {
+        b.className = 'px-3 py-1.5 rounded-full flex items-center gap-1.5 text-slate-400 hover:text-white transition cursor-pointer';
+      });
+
+      // Reset Bottom Nav Colors
+      [navHome, navDash, navTrack, navAuth].forEach(n => {
+        n.className = 'flex flex-col items-center text-slate-400 hover:text-slate-800 dark:hover:text-white cursor-pointer';
+      });
+
+      // Hide all screens
+      vLanding.classList.add('hidden');
+      vDashboard.classList.add('hidden');
+      vAuth.classList.add('hidden');
+
+      if (screen === 'landing') {
+        vLanding.classList.remove('hidden');
+        btnLanding.className = 'px-3 py-1.5 rounded-full flex items-center gap-1.5 bg-emerald-600 text-white shadow-xs transition cursor-pointer';
+        navHome.className = 'flex flex-col items-center text-emerald-700 dark:text-emerald-400 cursor-pointer';
+      } else if (screen === 'dashboard') {
+        vDashboard.classList.remove('hidden');
+        btnDashboard.className = 'px-3 py-1.5 rounded-full flex items-center gap-1.5 bg-emerald-600 text-white shadow-xs transition cursor-pointer';
+        navDash.className = 'flex flex-col items-center text-emerald-700 dark:text-emerald-400 cursor-pointer';
+      } else if (screen === 'auth') {
+        vAuth.classList.remove('hidden');
+        btnAuth.className = 'px-3 py-1.5 rounded-full flex items-center gap-1.5 bg-emerald-600 text-white shadow-xs transition cursor-pointer';
+        navAuth.className = 'flex flex-col items-center text-emerald-700 dark:text-emerald-400 cursor-pointer';
+      }
+      lucide.createIcons();
+    }
+
+    // Dashboard Segment Switching: 'today' | 'track-record'
+    function setDashSegment(segment) {
+      const tabToday = document.getElementById('dash-tab-today');
+      const tabTrack = document.getElementById('dash-tab-track');
+      const viewToday = document.getElementById('subview-today');
+      const viewTrack = document.getElementById('subview-track');
+      const headerTitle = document.getElementById('dash-header-title');
+
+      if (segment === 'today') {
+        tabToday.className = 'flex-1 py-1 text-xs font-bold rounded-full bg-emerald-700 text-white shadow-xs transition cursor-pointer';
+        tabTrack.className = 'flex-1 py-1 text-xs font-bold rounded-full text-slate-500 hover:text-slate-900 dark:hover:text-white transition cursor-pointer';
+        viewToday.classList.remove('hidden');
+        viewTrack.classList.add('hidden');
+        headerTitle.innerText = "Today's Workspace";
+      } else {
+        tabTrack.className = 'flex-1 py-1 text-xs font-bold rounded-full bg-emerald-700 text-white shadow-xs transition cursor-pointer';
+        tabToday.className = 'flex-1 py-1 text-xs font-bold rounded-full text-slate-500 hover:text-slate-900 dark:hover:text-white transition cursor-pointer';
+        viewTrack.classList.remove('hidden');
+        viewToday.classList.add('hidden');
+        headerTitle.innerText = "Broker Track Record";
+      }
+      lucide.createIcons();
+    }
+
+    // Track Record Internal Tabs
+    function setTrackTab(tab) {
+      const activeContent = document.getElementById('track-content-active');
+      const winsContent = document.getElementById('track-content-wins');
+      const bActive = document.getElementById('trk-active');
+      const bWins = document.getElementById('trk-wins');
+
+      [bActive, bWins].forEach(b => {
+        b.className = 'px-3 py-1 rounded-full text-[10px] font-bold bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600';
+      });
+
+      if (tab === 'active') {
+        bActive.className = 'px-3 py-1 rounded-full text-[10px] font-bold bg-emerald-700 text-white shadow-xs';
+        activeContent.classList.remove('hidden');
+        winsContent.classList.add('hidden');
+      } else {
+        bWins.className = 'px-3 py-1 rounded-full text-[10px] font-bold bg-emerald-700 text-white shadow-xs';
+        winsContent.classList.remove('hidden');
+        activeContent.classList.add('hidden');
+      }
+    }
+
+    // Device shell switcher (375px vs 412px vs Full)
     function setDevice(mode) {
       const wrapper = document.getElementById('device-wrapper');
       const statusBar = document.getElementById('status-bar');
@@ -514,23 +775,22 @@
       const btnLg = document.getElementById('btn-mobile-lg');
       const btnFull = document.getElementById('btn-full');
 
-      // Reset buttons
       [btnSm, btnLg, btnFull].forEach(b => {
-        b.className = 'px-3 py-1.5 rounded-full flex items-center gap-1.5 text-slate-400 hover:text-white transition';
+        b.className = 'px-2.5 py-1 rounded-full flex items-center gap-1 text-slate-400 hover:text-white transition';
       });
 
       if (mode === 'mobile-sm') {
-        wrapper.className = 'device-shell w-[375px] bg-white dark:bg-[#0B0F17] rounded-[36px] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.6)] border-[8px] border-slate-800 overflow-hidden flex flex-col relative transition-all duration-300';
+        wrapper.className = 'device-shell w-[375px] bg-white dark:bg-[#0B0F17] rounded-[36px] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.7)] border-[8px] border-slate-800 overflow-hidden flex flex-col relative transition-all duration-300';
         statusBar.style.display = 'flex';
-        btnSm.className = 'px-3 py-1.5 rounded-full flex items-center gap-1.5 bg-emerald-600 text-white shadow-xs transition';
+        btnSm.className = 'px-2.5 py-1 rounded-full flex items-center gap-1 bg-slate-800 text-white transition';
       } else if (mode === 'mobile-lg') {
-        wrapper.className = 'device-shell w-[412px] bg-white dark:bg-[#0B0F17] rounded-[36px] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.6)] border-[8px] border-slate-800 overflow-hidden flex flex-col relative transition-all duration-300';
+        wrapper.className = 'device-shell w-[412px] bg-white dark:bg-[#0B0F17] rounded-[36px] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.7)] border-[8px] border-slate-800 overflow-hidden flex flex-col relative transition-all duration-300';
         statusBar.style.display = 'flex';
-        btnLg.className = 'px-3 py-1.5 rounded-full flex items-center gap-1.5 bg-emerald-600 text-white shadow-xs transition';
+        btnLg.className = 'px-2.5 py-1 rounded-full flex items-center gap-1 bg-slate-800 text-white transition';
       } else {
         wrapper.className = 'device-shell w-full max-w-4xl bg-white dark:bg-[#0B0F17] rounded-2xl shadow-xl border border-slate-800 overflow-hidden flex flex-col relative transition-all duration-300';
         statusBar.style.display = 'none';
-        btnFull.className = 'px-3 py-1.5 rounded-full flex items-center gap-1.5 bg-emerald-600 text-white shadow-xs transition';
+        btnFull.className = 'px-2.5 py-1 rounded-full flex items-center gap-1 bg-slate-800 text-white transition';
       }
     }
 
@@ -550,6 +810,13 @@
       lucide.createIcons();
     }
 
+    // Simulated Extraction
+    function simulateExtraction() {
+      const res = document.getElementById('paste-result');
+      res.classList.remove('hidden');
+      res.innerText = "Extracted: 3 BHK Builder Floor · 200 Gaj · Model Town · ₹1.25 Cr (96% Match with Rajesh Sharma)";
+    }
+
     // Interactive Commission Calculator
     let currentDealVal = 7500000;
     let currentRate = 1.5;
@@ -562,26 +829,15 @@
       const slider = document.getElementById('deal-slider');
       currentDealVal = Number(slider.value);
       document.getElementById('calc-val-label').innerText = formatInr(currentDealVal);
-      document.getElementById('calc-rate-label').innerText = currentRate + '%';
 
       const perDeal = (currentDealVal * currentRate) / 100;
-      const annual = perDeal * 3 * 12; // 3 deals per month
+      const annual = perDeal * 3 * 12;
 
       document.getElementById('calc-per-deal').innerText = formatInr(perDeal);
       document.getElementById('calc-annual').innerText = formatInr(annual) + ' / yr';
     }
 
-    function setCalcVal(val) {
-      document.getElementById('deal-slider').value = val;
-      updateCalc();
-    }
-
-    function setCalcRate(rate) {
-      currentRate = rate;
-      updateCalc();
-    }
-
-    // Demo Inquiry Form Submission Handler
+    // Demo Form Submission
     function handleDemoSubmit(e) {
       e.preventDefault();
       const btn = document.getElementById('demo-btn');
@@ -589,12 +845,17 @@
       btn.innerText = 'Submitting...';
       btn.disabled = true;
 
-      // Simulate API call and confirmation
       setTimeout(() => {
         btn.parentElement.classList.add('hidden');
         success.classList.remove('hidden');
         lucide.createIcons();
-      }, 700);
+      }, 600);
+    }
+
+    // Simulated Login
+    function handleLoginSubmit(e) {
+      e.preventDefault();
+      switchScreen('dashboard');
     }
   </script>
 </body>
