@@ -34,6 +34,17 @@ export function renderFlyerHtml(property: PublicPropertyDto, share: IShareLink):
           .join('')
       : '';
 
+  const videoUrl = property.videoUrl || property.video?.url;
+  const videoHtml = videoUrl
+    ? `
+      <div style="margin-bottom: 16px; border-radius: 12px; overflow: hidden; background: #0f172a;">
+        <video src="${escapeHtml(videoUrl)}" controls playsinline poster="${escapeHtml(coverImage)}" style="width: 100%; max-height: 420px; display: block; border-radius: 12px;">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    `
+    : '';
+
   const tagsHtml = (property.tags || [])
     .map((tag) => `<span class="tag-badge">#${escapeHtml(tag)}</span>`)
     .join('');
@@ -206,6 +217,7 @@ export function renderFlyerHtml(property: PublicPropertyDto, share: IShareLink):
 
   <div class="container">
     <div class="card">
+      ${videoHtml}
       ${photosHtml ? `<div class="gallery">${photosHtml}</div>` : ''}
       <div class="details">
         <div class="price-tag">${formattedPrice}</div>

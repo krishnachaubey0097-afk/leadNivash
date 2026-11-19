@@ -29,6 +29,12 @@ export interface PublicPropertyDto {
     width?: number;
     height?: number;
   }>;
+  videoUrl?: string;
+  video?: {
+    url: string;
+    thumbnailUrl?: string;
+    duration?: number;
+  };
   agency?: {
     name?: string;
     phone?: string;
@@ -66,6 +72,14 @@ export function toPublicProperty(
     photos: Array.isArray(p.photos)
       ? p.photos.map(({ url, width, height }) => ({ url, width, height }))
       : [],
+    videoUrl: p.videoUrl || p.video?.url || undefined,
+    video: p.video?.url
+      ? {
+          url: p.video.url,
+          thumbnailUrl: p.video.thumbnailUrl,
+          duration: p.video.duration,
+        }
+      : undefined,
     agency: agency
       ? {
           name: agency.name,

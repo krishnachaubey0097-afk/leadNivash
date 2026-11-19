@@ -19,7 +19,7 @@ export class MediaService {
    * Generates a signed Cloudinary upload signature for client-side direct upload of property photos.
    * Scoped to `properties/${userId}`.
    */
-  static getSignedUploadParams(userId: string): SignedUploadParams {
+  static getSignedUploadParams(userId: string, resourceType: 'image' | 'video' = 'image'): SignedUploadParams {
     if (!userId) {
       throw new Error('User ID required for media upload authorization');
     }
@@ -39,7 +39,7 @@ export class MediaService {
       apiKey,
       cloudName,
       folder,
-      uploadUrl: `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+      uploadUrl: `https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/upload`,
     };
   }
 

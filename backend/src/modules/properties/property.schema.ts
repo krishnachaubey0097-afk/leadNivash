@@ -38,6 +38,16 @@ export const createPropertySchema = {
         )
         .max(4, 'Maximum of 4 photos allowed per property')
         .optional(),
+      video: z
+        .object({
+          url: z.string().url(),
+          publicId: z.string().optional(),
+          duration: z.number().optional(),
+          thumbnailUrl: z.string().url().optional(),
+        })
+        .strict()
+        .optional(),
+      videoUrl: z.string().url().optional(),
       owner: z
         .object({
           name: z.string().max(100).optional(),

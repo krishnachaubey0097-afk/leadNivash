@@ -132,7 +132,8 @@ export class PropertyController {
   static async signPhotoUpload(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const userId = req.user!._id;
-      const params = MediaService.getSignedUploadParams(userId);
+      const resourceType = (req.query.type as string) === 'video' ? 'video' : 'image';
+      const params = MediaService.getSignedUploadParams(userId, resourceType);
 
       res.status(200).json({
         success: true,

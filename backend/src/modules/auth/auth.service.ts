@@ -501,4 +501,41 @@ export class AuthService {
     user.sessions = [];
     await user.save();
   }
+
+  private static otpMap = new Map<string, { otp: string; expiresAt: number; token?: string }>();
+
+  static async sendOtp(email: string): Promise<{ success: boolean; message: string; devOtp?: string }> {
+    const cleanEmail = email.toLowerCase().trim();
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiresAt = Date.now() + 10 * 60 * 1000; // 10 minutes
+
+    this.otpMap.set(cleanEmail, { otp, expiresAt });
+    await mailService.sendVerificationOtp(cleanEmail, otp);
+
+    return {
+      success: true,
+      message: 'Verification code sent to your email address.',
+      devOtp: process.env.NODE_ENV !== 'production' ? otp : undefined,
+    };
+  }
+
+  static async verifyOtp(email: string, otp: string): Promise<{ verified: boolean; verificationToken: string }> {
+    const cleanEmail = email.toLowerCase().trim();
+    const record = this.otpMap.get(cleanEmail);
+
+    if (!record || record.expiresAt < Date.now() || record.otp !== otp.trim()) {
+      const err: any = new Error('Invalid or expired verification code. Please request a new code.');
+      err.statusCode = 400;
+      err.code = 'INVALID_OTP';
+      throw err;
+    }
+
+    const verificationToken = crypto.randomBytes(32).toString('hex');
+    this.otpMap.set(cleanEmail, { ...record, token: verificationToken });
+
+    return {
+      verified: true,
+      verificationToken,
+    };
+  }
 }

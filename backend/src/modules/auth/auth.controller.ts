@@ -9,10 +9,11 @@ import { env } from '../../config/env.js';
 
 function setRefreshCookie(res: Response, value: string): void {
   const isProd = env.NODE_ENV === 'production';
+  const sameSite = env.NODE_ENV === 'test' ? 'strict' : (isProd ? 'none' : 'lax');
   res.cookie(REFRESH_COOKIE_NAME, value, {
     httpOnly: true,
     secure: isProd,
-    sameSite: isProd ? 'none' : 'lax',
+    sameSite,
     path: REFRESH_COOKIE_PATH,
     maxAge: REFRESH_MAX_AGE_MS,
   });
@@ -20,10 +21,11 @@ function setRefreshCookie(res: Response, value: string): void {
 
 function clearRefreshCookie(res: Response): void {
   const isProd = env.NODE_ENV === 'production';
+  const sameSite = env.NODE_ENV === 'test' ? 'strict' : (isProd ? 'none' : 'lax');
   res.clearCookie(REFRESH_COOKIE_NAME, {
     httpOnly: true,
     secure: isProd,
-    sameSite: isProd ? 'none' : 'lax',
+    sameSite,
     path: REFRESH_COOKIE_PATH,
   });
 }
@@ -175,6 +177,46 @@ export class AuthController {
         data: {
           message: 'Password has been reset successfully. Please log in with your new password.',
         },
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async sendOtp(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const email = req.body.email;
+      if (!email || typeof email !== 'string') {
+        res.status(400).json({
+          success: false,
+          error: { code: 'VALIDATION_ERROR', message: 'Valid email is required.' },
+        });
+        return;
+      }
+      const result = await AuthService.sendOtp(email);
+      res.status(200).json({
+        success: true,
+        data: result,
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async verifyOtp(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { email, otp } = req.body;
+      if (!email || !otp) {
+        res.status(400).json({
+          success: false,
+          error: { code: 'VALIDATION_ERROR', message: 'Email and 6-digit code are required.' },
+        });
+        return;
+      }
+      const result = await AuthService.verifyOtp(email, otp);
+      res.status(200).json({
+        success: true,
+        data: result,
       });
     } catch (err) {
       next(err);

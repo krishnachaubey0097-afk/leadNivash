@@ -40,6 +40,9 @@ authRouter.get('/login', (_req, res) => {
 authRouter.post('/refresh', AuthController.refresh);
 authRouter.post('/logout', AuthController.logout);
 
+authRouter.post('/send-otp', authLimiter, AuthController.sendOtp);
+authRouter.post('/verify-otp', authLimiter, AuthController.verifyOtp);
+
 authRouter.post(
   '/forgot-password',
   authLimiter,

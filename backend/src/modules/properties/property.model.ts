@@ -12,6 +12,13 @@ export interface IPropertyPhoto {
   height?: number;
 }
 
+export interface IPropertyVideo {
+  url: string;
+  publicId?: string;
+  duration?: number;
+  thumbnailUrl?: string;
+}
+
 export interface IOwnerVault {
   name?: string;
   phone?: string;
@@ -40,6 +47,8 @@ export interface IProperty extends Document {
   description?: string;
   status: PropertyStatus;
   photos: IPropertyPhoto[];
+  video?: IPropertyVideo;
+  videoUrl?: string;
   owner?: IOwnerVault; // Protected Owner Vault
   source: 'manual' | 'paste';
   isDeleted: boolean;
@@ -153,6 +162,16 @@ const PropertySchema = new Schema<IProperty>(
       type: [PhotoSchema],
       validate: [(val: IPropertyPhoto[]) => val.length <= 4, 'Maximum of 4 photos allowed'],
       default: [],
+    },
+    video: {
+      url: { type: String, trim: true },
+      publicId: { type: String, trim: true },
+      duration: { type: Number },
+      thumbnailUrl: { type: String, trim: true },
+    },
+    videoUrl: {
+      type: String,
+      trim: true,
     },
     owner: {
       type: OwnerVaultSchema,
