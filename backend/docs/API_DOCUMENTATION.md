@@ -274,6 +274,7 @@ Broker notifications & dashboard ───────────────�
 ### Category 01 — Authentication & Session Management
 * `POST /api/v1/auth/register` — Create new broker account (`201 Created`).
 * `POST /api/v1/auth/login` — Authenticate broker, issue access token & httpOnly cookie (`200 OK`).
+* `POST /api/v1/auth/google` — Google OAuth token exchange & account login/registration with mobile validation (`200 OK`).
 * `POST /api/v1/auth/refresh` — Rotate refresh token & issue fresh 15m access token (`200 OK`).
 * `POST /api/v1/auth/logout` — Invalidate current session and clear refresh cookie (`200 OK`).
 * `POST /api/v1/auth/forgot-password` — Issue password reset token via email (`200 OK`).

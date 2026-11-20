@@ -538,4 +538,120 @@ export class AuthService {
       verificationToken,
     };
   }
+
+  static async googleAuth(
+    data: {
+      email: string;
+      name: string;
+      googleId?: string;
+      phone?: string;
+      agencyName?: string;
+      city?: string;
+    },
+    deviceLabel = 'Web Browser (Google Sign-In)'
+  ): Promise<AuthSuccessResult & { requiresPhone?: boolean }> {
+    const email = data.email.toLowerCase().trim();
+
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      if (!data.phone) {
+        return {
+          requiresPhone: true,
+          accessToken: '',
+          refreshCookieValue: '',
+          user: {
+            _id: '',
+            name: data.name,
+            email,
+            phone: '',
+            role: 'user',
+            agency: { name: data.agencyName || '', city: data.city || 'Panipat' },
+            plan: { tier: 'trial', trialEndsAt: new Date(), limits: getPlanLimits('trial') },
+          },
+        };
+      }
+
+      const randomPassword = crypto.randomBytes(24).toString('hex');
+      const passwordHash = await bcrypt.hash(randomPassword, 12);
+      const trialEndsAt = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000);
+
+      user = new User({
+        name: data.name,
+        email,
+        passwordHash,
+        phone: data.phone,
+        role: 'user',
+        agency: {
+          name: data.agencyName || 'Sharma Real Estate Agency',
+          city: data.city || 'Panipat',
+          reraNo: '',
+        },
+        plan: {
+          tier: 'trial',
+          trialEndsAt,
+          limits: getPlanLimits('trial'),
+        },
+        consent: {
+          termsAcceptedAt: new Date(),
+          privacyVersion: '1.0',
+        },
+        sessions: [],
+      });
+    } else {
+      if (data.phone && !user.phone) {
+        user.phone = data.phone;
+      }
+    }
+
+    if (user.isDisabled || user.isDeleted) {
+      const err: any = new Error('This account has been disabled or deleted.');
+      err.statusCode = 403;
+      err.code = 'FORBIDDEN';
+      throw err;
+    }
+
+    const sessionId = crypto.randomUUID();
+    const secret = crypto.randomBytes(32).toString('hex');
+    const refreshTokenHash = await bcrypt.hash(secret, 10);
+    const expiresAt = new Date(Date.now() + REFRESH_MAX_AGE_MS);
+
+    user.sessions.push({
+      sessionId,
+      refreshTokenHash,
+      deviceLabel,
+      createdAt: new Date(),
+      lastUsedAt: new Date(),
+      expiresAt,
+    });
+
+    if (user.sessions.length > MAX_SESSIONS_PER_USER) {
+      user.sessions.shift();
+    }
+
+    await user.save();
+
+    const accessToken = signAccessToken({
+      _id: user._id.toString(),
+      email: user.email,
+      role: user.role,
+      sessionId,
+    });
+
+    const refreshCookieValue = `${sessionId}.${secret}`;
+
+    return {
+      accessToken,
+      refreshCookieValue,
+      user: {
+        _id: user._id.toString(),
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        role: user.role,
+        agency: user.agency,
+        plan: user.plan,
+      },
+    };
+  }
 }

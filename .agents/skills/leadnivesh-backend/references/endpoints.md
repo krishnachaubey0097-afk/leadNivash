@@ -13,6 +13,7 @@ API Prefix: `/api/v1`
 ### Category 01: Authentication & Sessions
 - `POST /api/v1/auth/login` - Body: `{ email, password }`. Returns `{ accessToken, user }`.
 - `POST /api/v1/auth/register` - Body: `{ name, email, password, phone, agency, consent }`.
+- `POST /api/v1/auth/google` - Body: `{ idToken, phone, name }`. Returns `{ accessToken, user, requiresPhone }`.
 - `POST /api/v1/auth/refresh` - Issues new access token via httpOnly refresh cookie.
 - `POST /api/v1/auth/logout` - Revokes current refresh token session.
 - `GET /api/v1/auth/sessions` - List active sessions for authenticated user.

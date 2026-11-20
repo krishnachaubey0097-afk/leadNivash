@@ -68,3 +68,17 @@ export const resetPasswordSchema = {
     })
     .strict(),
 };
+
+export const googleAuthSchema = {
+  body: z
+    .object({
+      credential: z.string().optional(),
+      email: z.string().email('Valid email address is required').toLowerCase(),
+      name: z.string().min(1, 'Name is required').max(100),
+      googleId: z.string().optional(),
+      phone: z.string().optional(),
+      agencyName: z.string().max(100).optional(),
+      city: z.string().max(50).optional(),
+    })
+    .strict(),
+};

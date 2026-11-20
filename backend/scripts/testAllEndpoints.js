@@ -70,6 +70,15 @@ async function runTests() {
   });
   if (adminLoginRes.ok && adminLoginRes.data?.data?.accessToken) {
     adminToken = adminLoginRes.data.data.accessToken;
+    const bId = loginRes.data?.data?.user?.id || loginRes.data?.data?.user?._id;
+    if (bId) {
+      // Ensure test broker has 'pro' tier capacity for test suite
+      await fetch(`${BASE_URL}/api/v1/admin/users/${bId}/plan`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${adminToken}` },
+        body: JSON.stringify({ tier: 'pro' }),
+      }).catch(() => {});
+    }
   }
 
   const randEmail = `testbroker_${Date.now()}@example.com`;
@@ -83,6 +92,7 @@ async function runTests() {
   });
 
   await req('List Active Sessions', 'GET', '/api/v1/auth/sessions', null, brokerToken);
+  await req('Request Password Reset', 'POST', '/api/v1/auth/forgot-password', { email: 'broker@leadnivesh.com' });
 
   // --- 02. Properties ---
   console.log('\n--- Category 02: Properties ---');

@@ -9,9 +9,12 @@ import {
   revokeSessionSchema,
   forgotPasswordSchema,
   resetPasswordSchema,
+  googleAuthSchema,
 } from './auth.schema.js';
 
 export const authRouter = Router();
+
+authRouter.post('/google', authLimiter, validate(googleAuthSchema), AuthController.googleAuth);
 
 authRouter.post('/register', authLimiter, validate(registerSchema), AuthController.register);
 authRouter.get('/register', (_req, res) => {

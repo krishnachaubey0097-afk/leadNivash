@@ -222,5 +222,32 @@ export class AuthController {
       next(err);
     }
   }
+
+  static async googleAuth(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const result = await AuthService.googleAuth(req.body, req.headers['user-agent']);
+      if (result.requiresPhone) {
+        res.status(200).json({
+          success: true,
+          data: {
+            requiresPhone: true,
+            user: result.user,
+          },
+        });
+        return;
+      }
+
+      setRefreshCookie(res, result.refreshCookieValue);
+      res.status(200).json({
+        success: true,
+        data: {
+          accessToken: result.accessToken,
+          user: result.user,
+        },
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 

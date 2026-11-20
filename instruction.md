@@ -1575,5 +1575,3 @@ When using this document as context, follow the **⚠️ Version Safety Rule** a
 
 
 *Industry-agnostic. Adapt the domain add-ons in Section 12 for your use case.*
-
-
