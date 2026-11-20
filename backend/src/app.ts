@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import compression from 'compression';
 import morgan from 'morgan';
 import { env } from './config/env.js';
+import { logger } from './services/logger.service.js';
 import { isDbConnected } from './config/db.js';
 import { mongoSanitize } from './middleware/mongoSanitize.js';
 import { globalLimiter, authLimiter, publicLimiter } from './middleware/rateLimiter.js';
@@ -55,14 +56,29 @@ app.use(
 // 2. CORS (Explicit origin allowlist with credentials)
 const allowedOrigins = env.CORS_ORIGINS.split(',').map((o) => o.trim());
 const allowAll = allowedOrigins.includes('*');
+
+const isAllowedOrigin = (origin: string): boolean => {
+  if (allowAll) return true;
+  if (allowedOrigins.includes(origin)) return true;
+  // Automatically permit all Vercel preview and production deployments
+  if (origin.endsWith('.vercel.app')) return true;
+  // Automatically permit Render deployments
+  if (origin.endsWith('.onrender.com')) return true;
+  // Local development
+  if (/^https?:\/\/localhost(:\d+)?$/.test(origin)) return true;
+  if (/^https?:\/\/127\.0\.0\.1(:\d+)?$/.test(origin)) return true;
+  return false;
+};
+
 app.use(
   cors({
     origin: (origin, callback) => {
       // Allow requests with no origin (like mobile apps, curl, server-to-server) or in allowed list
-      if (!origin || allowAll || allowedOrigins.includes(origin)) {
+      if (!origin || isAllowedOrigin(origin)) {
         callback(null, true);
       } else {
-        callback(new Error(`CORS blocked for origin: ${origin}`));
+        logger.warn(`CORS blocked for unauthorized origin: ${origin}`);
+        callback(null, false);
       }
     },
     credentials: true,
