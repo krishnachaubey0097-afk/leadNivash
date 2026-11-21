@@ -29,10 +29,22 @@ export class ContactService {
     // 2. Normalize phone
     const phoneE164 = normalizePhoneE164(data.phone);
 
-    // 3. Hash IP address for privacy
+    // 3. Prevent duplicate submissions: If same phone submitted within last 5 minutes, return existing lead
+    const latestLeadForPhone = await ContactLead.findOne({ phoneE164 }).sort({ _id: -1 });
+    if (latestLeadForPhone && latestLeadForPhone.createdAt) {
+      const elapsedMs = Date.now() - new Date(latestLeadForPhone.createdAt).getTime();
+      if (elapsedMs < 5 * 60 * 1000) {
+        return {
+          success: true,
+          id: latestLeadForPhone._id.toString(),
+        };
+      }
+    }
+
+    // 4. Hash IP address for privacy
     const ipHash = crypto.createHash('sha256').update(ipAddress).digest('hex');
 
-    // 4. Save contact lead
+    // 5. Save contact lead
     const lead = await ContactLead.create({
       name: data.name.trim(),
       email: data.email ? data.email.trim().toLowerCase() : undefined,
