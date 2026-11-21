@@ -60,8 +60,14 @@ const allowAll = allowedOrigins.includes('*');
 const isAllowedOrigin = (origin: string): boolean => {
   if (allowAll) return true;
   if (allowedOrigins.includes(origin)) return true;
-  // Automatically permit all Vercel preview and production deployments
-  if (origin.endsWith('.vercel.app')) return true;
+  // Automatically permit all Vercel preview and production deployments & custom domains
+  if (
+    origin.endsWith('.vercel.app') ||
+    origin.includes('leadnivash') ||
+    origin.includes('leadnivesh')
+  ) {
+    return true;
+  }
   // Automatically permit Render deployments
   if (origin.endsWith('.onrender.com')) return true;
   // Local development

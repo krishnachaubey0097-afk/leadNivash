@@ -20,7 +20,13 @@ class MailService {
   }
 
   async sendPasswordResetEmail(to: string, resetToken: string): Promise<void> {
-    const resetUrl = `${env.CLIENT_URL}/reset-password?token=${resetToken}`;
+    const baseUrl =
+      env.CLIENT_URL && !env.CLIENT_URL.includes('localhost')
+        ? env.CLIENT_URL
+        : env.NODE_ENV === 'production'
+        ? 'https://leadnivash-frontend.vercel.app'
+        : env.CLIENT_URL || 'http://localhost:5173';
+    const resetUrl = `${baseUrl}/reset-password?token=${resetToken}`;
     const subject = 'LeadNivesh Password Reset Request';
     const text = `You requested a password reset for your LeadNivesh account.\n\nClick the link below to set a new password:\n${resetUrl}\n\nThis link will expire in 30 minutes. If you did not request this, please ignore this email.`;
     const html = `
