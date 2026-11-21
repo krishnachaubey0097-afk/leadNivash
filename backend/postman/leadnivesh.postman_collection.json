@@ -51,6 +51,17 @@
       "name": "00 - Health & Probes",
       "item": [
         {
+          "name": "Root Welcome Info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/"
+            },
+            "description": "Returns API root welcome, status, version and resource endpoints."
+          }
+        },
+        {
           "name": "Liveness Probe (Health)",
           "request": {
             "method": "GET",
@@ -466,7 +477,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"mode\": \"lead_capture\",\n  \"expiresDays\": 14\n}",
+              "raw": "{\n  \"template\": \"flyer\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -684,7 +695,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"property\": {\n    \"locality\": \"Sector 12\",\n    \"type\": \"Plot\",\n    \"pricePaise\": 1500000000,\n    \"sizeGaj\": 250,\n    \"city\": \"Panipat\"\n  },\n  \"buyer\": {\n    \"localities\": [\n      \"sector-12\",\n      \"sector-11\"\n    ],\n    \"types\": [\n      \"Plot\"\n    ],\n    \"budget\": {\n      \"minPaise\": 1200000000,\n      \"maxPaise\": 1600000000\n    },\n    \"sizeGaj\": {\n      \"min\": 200,\n      \"max\": 300\n    }\n  }\n}",
+              "raw": "{\n  \"property\": {\n    \"type\": \"Plot\",\n    \"purpose\": \"Sale\",\n    \"localityKey\": \"sector-12\",\n    \"priceDemandPaise\": 1500000000,\n    \"sizeGaj\": 250\n  },\n  \"buyer\": {\n    \"purpose\": \"Sale\",\n    \"types\": [\n      \"Plot\"\n    ],\n    \"localities\": [\n      {\n        \"display\": \"Sector 12\",\n        \"key\": \"sector-12\"\n      }\n    ],\n    \"budget\": {\n      \"minPaise\": 1200000000,\n      \"maxPaise\": 1600000000\n    },\n    \"sizeGaj\": {\n      \"min\": 200,\n      \"max\": 300\n    }\n  },\n  \"tolerancePct\": 10\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -833,7 +844,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"amountPaise\": 5000000,\n  \"note\": \"Token advance commission received via NEFT\",\n  \"receivedAt\": \"2026-11-16T13:16:16.639Z\"\n}",
+              "raw": "{\n  \"amountPaise\": 5000000,\n  \"note\": \"Token advance commission received via NEFT\",\n  \"receivedAt\": \"2026-11-21T19:25:40.367Z\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -991,7 +1002,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"canonical\": \"Sector 18 HUDA\",\n  \"canonicalKey\": \"sector-18-huda\",\n  \"aliases\": [\n    \"s18 huda\",\n    \"sec 18 huda\",\n    \"sector 18 huda ground\"\n  ],\n  \"city\": \"Panipat\"\n}",
+              "raw": "{\n  \"canonical\": \"Sector 18 HUDA\",\n  \"aliases\": [\n    \"s18 huda\",\n    \"sec 18 huda\",\n    \"sector 18 huda ground\"\n  ],\n  \"city\": \"Panipat\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1127,7 +1138,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"shareToken\": \"{{shareToken}}\",\n  \"name\": \"Sunil Kumar\",\n  \"phone\": \"+919812999888\",\n  \"message\": \"Is this corner plot still available? When can I inspect the site?\"\n}",
+              "raw": "{\n  \"propertyId\": \"{{propertyId}}\",\n  \"name\": \"Sunil Kumar\",\n  \"phone\": \"+919812999888\",\n  \"message\": \"Is this corner plot still available? When can I inspect the site?\"\n}",
               "options": {
                 "raw": {
                   "language": "json"

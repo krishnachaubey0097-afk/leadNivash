@@ -10,24 +10,53 @@ import { verifyAccessToken } from '../../utils/jwt.js';
 
 function setRefreshCookie(res: Response, value: string): void {
   const isProd = env.NODE_ENV === 'production';
-  const sameSite = env.NODE_ENV === 'test' ? 'strict' : (isProd ? 'none' : 'lax');
+  const isSecure = isProd || Boolean(res.req?.secure || res.req?.headers?.['x-forwarded-proto'] === 'https');
+  const sameSite = env.NODE_ENV === 'test' ? 'strict' : (isSecure ? 'none' : 'lax');
+
+  // Secure HTTP-only refresh token cookie with root path & 30-day persistence
   res.cookie(REFRESH_COOKIE_NAME, value, {
     httpOnly: true,
-    secure: isProd,
+    secure: isSecure,
     sameSite,
     path: REFRESH_COOKIE_PATH,
+    maxAge: REFRESH_MAX_AGE_MS,
+  });
+
+  // Client-readable session indicator cookie (allows frontend to hydrate session immediately on boot)
+  res.cookie('leadnivesh_logged_in', 'true', {
+    httpOnly: false,
+    secure: isSecure,
+    sameSite,
+    path: '/',
     maxAge: REFRESH_MAX_AGE_MS,
   });
 }
 
 function clearRefreshCookie(res: Response): void {
   const isProd = env.NODE_ENV === 'production';
-  const sameSite = env.NODE_ENV === 'test' ? 'strict' : (isProd ? 'none' : 'lax');
+  const isSecure = isProd || Boolean(res.req?.secure || res.req?.headers?.['x-forwarded-proto'] === 'https');
+  const sameSite = env.NODE_ENV === 'test' ? 'strict' : (isSecure ? 'none' : 'lax');
+
   res.clearCookie(REFRESH_COOKIE_NAME, {
     httpOnly: true,
-    secure: isProd,
+    secure: isSecure,
     sameSite,
     path: REFRESH_COOKIE_PATH,
+  });
+
+  // Also clear legacy subpath cookie if client still has it in storage
+  res.clearCookie(REFRESH_COOKIE_NAME, {
+    httpOnly: true,
+    secure: isSecure,
+    sameSite,
+    path: '/api/v1/auth',
+  });
+
+  res.clearCookie('leadnivesh_logged_in', {
+    httpOnly: false,
+    secure: isSecure,
+    sameSite,
+    path: '/',
   });
 }
 

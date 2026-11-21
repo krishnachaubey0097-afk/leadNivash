@@ -272,11 +272,11 @@ Broker notifications & dashboard ───────────────�
 * `GET /api/v1` — API root service status. Returns version `1.0.0`. (`200 OK`).
 
 ### Category 01 — Authentication & Session Management
-* `POST /api/v1/auth/register` — Create new broker account (`201 Created`).
-* `POST /api/v1/auth/login` — Authenticate broker, issue access token & httpOnly cookie (`200 OK`).
-* `POST /api/v1/auth/google` — Google OAuth token exchange & account login/registration with mobile validation (`200 OK`).
-* `POST /api/v1/auth/refresh` — Rotate refresh token & issue fresh 15m access token (`200 OK`).
-* `POST /api/v1/auth/logout` — Invalidate current session and clear refresh cookie (`200 OK`).
+* `POST /api/v1/auth/register` — Create new broker account with 30-day session (`201 Created`).
+* `POST /api/v1/auth/login` — Authenticate broker, issue access token & persistent httpOnly refresh cookie (`Path=/`, `Max-Age=30d`, `SameSite=None/Lax`) and `leadnivesh_logged_in` marker (`200 OK`).
+* `POST /api/v1/auth/google` — Google OAuth token exchange & account login/registration with mobile validation and session cookie (`200 OK`).
+* `POST /api/v1/auth/refresh` — Rotate refresh token (with 5-minute concurrency grace window) & issue fresh 15m access token (`200 OK`).
+* `POST /api/v1/auth/logout` — Invalidate session in DB and clear refresh & session marker cookies (`200 OK`).
 * `POST /api/v1/auth/forgot-password` — Issue password reset token via email (`200 OK`).
 * `POST /api/v1/auth/reset-password` — Set new password using reset token (`200 OK`).
 * `GET /api/v1/auth/sessions` — List all active login devices and IPs for the current broker (`200 OK`).

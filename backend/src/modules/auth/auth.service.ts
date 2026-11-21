@@ -8,9 +8,9 @@ import { getPlanLimits } from '../../config/plans.js';
 import { mailService } from '../../services/mail.service.js';
 
 export const REFRESH_COOKIE_NAME = 'leadnivesh_refresh';
-export const REFRESH_COOKIE_PATH = '/api/v1/auth';
-export const REFRESH_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
-export const REFRESH_GRACE_WINDOW_MS = 15 * 1000; // 15-second grace window for concurrent refreshes
+export const REFRESH_COOKIE_PATH = '/';
+export const REFRESH_MAX_AGE_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
+export const REFRESH_GRACE_WINDOW_MS = 5 * 60 * 1000; // 5-minute grace window for concurrent/tab refreshes
 export const MAX_SESSIONS_PER_USER = 10;
 
 // Dummy bcrypt hash to ensure constant-time comparison on unknown email logins
@@ -414,11 +414,12 @@ export class AuthService {
       }
     }
 
-    // 3. ⚠️ BREACH DETECTED: Unknown / expired / re-used token presented outside grace window!
-    user.sessions = [];
+    // 3. Invalid or re-used secret presented outside grace window:
+    // Revoke this specific session to terminate access on this device while preserving other valid devices
+    user.sessions = user.sessions.filter((s) => s.sessionId !== sessionId);
     await user.save();
 
-    const err: any = new Error('Session invalidated due to suspicious activity. Please log in again.');
+    const err: any = new Error('Session has expired or was rotated. Please log in again.');
     err.statusCode = 401;
     err.code = 'REFRESH_TOKEN_INVALID';
     throw err;

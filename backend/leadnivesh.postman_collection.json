@@ -844,7 +844,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"amountPaise\": 5000000,\n  \"note\": \"Token advance commission received via NEFT\",\n  \"receivedAt\": \"2026-11-19T11:02:28.397Z\"\n}",
+              "raw": "{\n  \"amountPaise\": 5000000,\n  \"note\": \"Token advance commission received via NEFT\",\n  \"receivedAt\": \"2026-11-21T19:25:40.367Z\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1184,21 +1184,6 @@
                 }
               }
             },
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/public/contact"
-            }
-          }
-        },
-        {
-          "name": "List Platform Contact Leads (Broker/Admin)",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{accessToken}}"
-              }
-            ],
             "url": {
               "raw": "{{baseUrl}}/api/v1/public/contact"
             }
