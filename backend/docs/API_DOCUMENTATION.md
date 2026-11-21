@@ -337,7 +337,8 @@ Broker notifications & dashboard ───────────────�
 ### Category 10 — Public Endpoints & Consumer Inquiries
 * `GET /p/:token` — Render branded public property flyer webpage for consumers (`200 OK`).
 * `POST /api/v1/public/inquiries` — Public endpoint: consumer submits property inquiry (`201 Created`).
-* `POST /api/v1/public/contact` — Public landing page contact lead form (`201 Created`).
+* `POST /api/v1/public/contact` (alias `POST /api/v1/contact`) — Public landing page contact/demo lead form (`201 Created`).
+* `GET /api/v1/public/contact` (alias `GET /api/v1/contact`) — Authenticated broker/admin endpoint: view landing page contact leads (`200 OK`).
 * `GET /api/v1/inquiries` — Broker endpoint: view inquiries received on owned properties (`200 OK`).
 
 ### Category 11 — Trash & Recovery System

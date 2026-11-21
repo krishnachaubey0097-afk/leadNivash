@@ -1190,6 +1190,21 @@
           }
         },
         {
+          "name": "List Platform Contact Leads (Broker/Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/public/contact"
+            }
+          }
+        },
+        {
           "name": "Revoke Share Link",
           "request": {
             "method": "DELETE",

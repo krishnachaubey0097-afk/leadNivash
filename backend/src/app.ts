@@ -187,6 +187,7 @@ apiV1.use('/inquiries', brokerInquiryRouter);
 apiV1.use('/trash', trashRouter);
 apiV1.use('/public/inquiries', inquiryRouter);
 apiV1.use('/public/contact', publicContactRouter);
+apiV1.use('/contact', publicContactRouter);
 apiV1.use('/admin', adminRouter);
 
 app.use('/api/v1', apiV1);
