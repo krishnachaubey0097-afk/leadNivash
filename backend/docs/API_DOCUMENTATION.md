@@ -130,6 +130,10 @@ To avoid floating-point math rounding issues inherent in IEEE 754 numbers:
    * Call `POST /api/v1/trash/properties/:id/restore` to revert `isDeleted: false`.
 6. **Permanent Delete (`200 OK`):**
    * Call `DELETE /api/v1/trash/properties/:id` to remove the document permanently from MongoDB.
+7. **Cross-Device Real-Time Synchronization:**
+   * Centralized backend (`GET /api/v1/properties`, `GET /api/v1/buyers`, `GET /api/v1/dashboard/today`) enforces `Cache-Control: no-store, no-cache, must-revalidate` to prevent mobile browser 304 disk caching.
+   * Multi-device synchronization combines immediate event broadcasts (`leadnivash_data_changed`), mobile wake/focus listeners (`visibilitychange`, `window.focus`, `online`), and an active 8-second heartbeat sync.
+   * When any item is deleted on desktop, it instantly disappears from all logged-in mobile devices without manual page reload.
 
 ---
 

@@ -167,6 +167,14 @@ app.use('/api/v1/auth', authLimiter);
 // 8. API v1 Base Router
 const apiV1 = express.Router();
 
+// Enforce fresh, real-time database results for all mobile and desktop API requests (prevents 304 stale caching)
+apiV1.use((_req: Request, res: Response, next) => {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+  next();
+});
+
 apiV1.get('/', (_req: Request, res: Response) => {
   res.status(200).json({
     success: true,
