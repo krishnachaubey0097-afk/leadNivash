@@ -360,10 +360,21 @@ export class AuthService {
         sessionId,
       });
 
+      const sanitizedUser = {
+        _id: user._id.toString(),
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        role: user.role,
+        agency: user.agency,
+        plan: user.plan,
+      };
+
       return {
         accessToken,
         newRefreshCookieValue: `${sessionId}.${newSecret}`,
         userId: user._id.toString(),
+        user: sanitizedUser,
       };
     }
 
@@ -384,10 +395,21 @@ export class AuthService {
           sessionId,
         });
 
+        const sanitizedUser = {
+          _id: user._id.toString(),
+          name: user.name,
+          email: user.email,
+          phone: user.phone,
+          role: user.role,
+          agency: user.agency,
+          plan: user.plan,
+        };
+
         return {
           accessToken,
           newRefreshCookieValue: cookieValue, // Retain current cookie
           userId: user._id.toString(),
+          user: sanitizedUser,
         };
       }
     }
@@ -405,9 +427,11 @@ export class AuthService {
   /**
    * Revoke current session on logout.
    */
-  static async logout(cookieValue?: string): Promise<void> {
-    if (!cookieValue || !cookieValue.includes('.')) return;
-    const [sessionId] = cookieValue.split('.') as [string];
+  static async logout(cookieValue?: string, explicitSessionId?: string): Promise<void> {
+    let sessionId = explicitSessionId;
+    if (!sessionId && cookieValue && cookieValue.includes('.')) {
+      sessionId = cookieValue.split('.')[0];
+    }
     if (!sessionId) return;
 
     await User.updateOne(

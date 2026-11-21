@@ -6,6 +6,7 @@ import {
   REFRESH_MAX_AGE_MS,
 } from './auth.service.js';
 import { env } from '../../config/env.js';
+import { verifyAccessToken } from '../../utils/jwt.js';
 
 function setRefreshCookie(res: Response, value: string): void {
   const isProd = env.NODE_ENV === 'production';
@@ -81,6 +82,7 @@ export class AuthController {
         success: true,
         data: {
           accessToken: result.accessToken,
+          user: (result as any).user,
         },
       });
     } catch (err) {
@@ -92,7 +94,18 @@ export class AuthController {
   static async logout(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const cookieValue = req.cookies?.[REFRESH_COOKIE_NAME];
-      await AuthService.logout(cookieValue);
+      let sessionIdFromToken: string | undefined;
+      const authHeader = req.headers.authorization;
+      if (authHeader && authHeader.startsWith('Bearer ')) {
+        try {
+          const payload = verifyAccessToken(authHeader.split(' ')[1]);
+          sessionIdFromToken = payload.sessionId;
+        } catch {
+          // Token expired or invalid, continue with cookie invalidation
+        }
+      }
+
+      await AuthService.logout(cookieValue, sessionIdFromToken);
       clearRefreshCookie(res);
 
       res.status(200).json({
@@ -102,6 +115,7 @@ export class AuthController {
         },
       });
     } catch (err) {
+      clearRefreshCookie(res);
       next(err);
     }
   }
