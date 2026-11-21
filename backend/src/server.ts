@@ -1,3 +1,10 @@
+import os from 'os';
+
+// Configure libuv threadpool size to prevent bcrypt/crypto queue starvation under high concurrency
+if (!process.env.UV_THREADPOOL_SIZE) {
+  process.env.UV_THREADPOOL_SIZE = String(Math.max(16, (os.cpus()?.length || 4) * 2));
+}
+
 import { app } from './app.js';
 import { env } from './config/env.js';
 import { connectDB, disconnectDB } from './config/db.js';

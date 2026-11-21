@@ -10,6 +10,8 @@ export const registerSchema = {
         .min(8, 'Password must be at least 8 characters')
         .max(72, 'Password cannot exceed 72 bytes (bcrypt limit)'),
       phone: z.string().min(10, 'Valid phone number is required'),
+      agencyName: z.string().max(100).optional(),
+      city: z.string().max(50).optional(),
       agency: z
         .object({
           name: z.string().max(100).optional(),

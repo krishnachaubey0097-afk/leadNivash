@@ -112,6 +112,7 @@ const BuyerSchema = new Schema<IBuyer>(
 );
 
 // Compound index for querying active buyers per user
+BuyerSchema.index({ userId: 1, isDeleted: 1, createdAt: -1 });
 BuyerSchema.index({ userId: 1, status: 1, 'budget.maxPaise': 1 });
 
 export const Buyer = mongoose.model<IBuyer>('Buyer', BuyerSchema);

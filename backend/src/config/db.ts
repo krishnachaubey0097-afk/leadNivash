@@ -20,6 +20,8 @@ export async function connectDB(uri = env.MONGODB_URI): Promise<typeof mongoose>
 
   try {
     const conn = await mongoose.connect(uri, {
+      maxPoolSize: 50,
+      minPoolSize: 5,
       serverSelectionTimeoutMS: 15000,
       socketTimeoutMS: 45000,
       autoIndex: env.NODE_ENV !== 'production',

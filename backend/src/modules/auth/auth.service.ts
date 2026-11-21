@@ -77,8 +77,8 @@ export class AuthService {
       phone: data.phone,
       role: 'user',
       agency: {
-        name: data.agency?.name || '',
-        city: data.agency?.city || 'Panipat',
+        name: data.agency?.name || (data as any).agencyName || '',
+        city: data.agency?.city || (data as any).city || 'Panipat',
         reraNo: data.agency?.reraNo || '',
       },
       plan: {

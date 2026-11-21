@@ -197,6 +197,7 @@ const PropertySchema = new Schema<IProperty>(
 );
 
 // Compound queries for matching and fast filter retrieval
+PropertySchema.index({ userId: 1, isDeleted: 1, createdAt: -1 });
 PropertySchema.index({ userId: 1, status: 1, localityKey: 1 });
 PropertySchema.index({ userId: 1, priceDemandPaise: 1 });
 PropertySchema.index({ userId: 1, sizeGaj: 1 });
