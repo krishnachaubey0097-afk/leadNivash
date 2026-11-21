@@ -347,8 +347,8 @@ Broker notifications & dashboard ───────────────�
 * `DELETE /api/v1/trash/:type/:id` — Permanently eradicate an item from MongoDB (`200 OK`).
 
 ### Category 12 — Admin Operations
-* `GET /api/v1/admin/users` — List all registered platform brokers with pagination and tier filter (`200 OK`).
-* `PATCH /api/v1/admin/users/:id/plan` — Upgrade or downgrade a broker's tier (`trial`, `lite`, `pro`) and set expiry date (`200 OK`).
-* `GET /api/v1/admin/usage` — View system-wide aggregate statistics (`200 OK`).
-* `GET /api/v1/admin/inquiries` — View system-wide public property inquiries (`200 OK`).
-* `GET /api/v1/admin/contacts` — View public landing page contact leads (`200 OK`).
+* `GET /api/v1/admin/users` — List all registered platform brokers with pagination, search, and tier filter (`200 OK`).
+* `PATCH /api/v1/admin/users/:id/plan` — Upgrade or change a broker's tier (`trial`, `starter`, `pro`, `team`, `agency`) and set expiry date (`200 OK`).
+* `GET /api/v1/admin/usage` — View real-time system health, uptime, memory, online users (15m window), period active users (24h/7d/30d), module utilization breakdown, and recent audit events (`200 OK`).
+* `GET /api/v1/admin/inquiries` — View system-wide public property flyer inquiries (`200 OK`).
+* `GET /api/v1/admin/contacts` — View public landing page contact leads with honeypot validation (`200 OK`).
