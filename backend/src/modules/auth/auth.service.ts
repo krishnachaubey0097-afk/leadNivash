@@ -607,7 +607,7 @@ export class AuthService {
         phone: data.phone,
         role: 'user',
         agency: {
-          name: data.agencyName || 'Sharma Real Estate Agency',
+          name: data.agencyName || (data.name ? `${data.name} Realty` : 'Prime Realty'),
           city: data.city || 'Panipat',
           reraNo: '',
         },
