@@ -138,12 +138,19 @@ export class AuthService {
     ip: string,
     deviceLabel = 'Web Browser'
   ): Promise<AuthSuccessResult> {
-    const email = emailRaw.toLowerCase().trim();
-    const pairId = hashIdentifier(email, ip);
-    const emailId = hashEmailOnly(email);
+    const clean = emailRaw.trim();
+    // Support phone number (10 digits or with +91) as well as email
+    const isPhone = /^(\+91|91)?[6-9]\d{9}$/.test(clean.replace(/[\s-]/g, ''));
+    const phone10 = isPhone ? clean.replace(/\D/g, '').slice(-10) : '';
+    const email = clean.toLowerCase();
+
+    // Identifier for rate limiting: use phone10 if phone, else lowercase email
+    const lookupKey = isPhone ? `phone:${phone10}` : email;
+    const pairId = hashIdentifier(lookupKey, ip);
+    const emailId = hashEmailOnly(lookupKey);
     const now = new Date();
 
-    // 1. Check lockout status for both pair and email-wide
+    // 1. Check lockout status for both pair and identifier-wide
     const [pairAttempt, emailAttempt] = await Promise.all([
       LoginAttempt.findOne({ identifier: pairId }),
       LoginAttempt.findOne({ identifier: emailId }),
@@ -165,8 +172,21 @@ export class AuthService {
       throw err;
     }
 
-    // 2. Find user (selecting passwordHash explicitly since it has select: false)
-    const user = await User.findOne({ email }).select('+passwordHash');
+    // 2. Find user by email OR phone (selecting passwordHash explicitly since it has select: false)
+    let user;
+    if (isPhone) {
+      user = await User.findOne({
+        $or: [
+          { phone: `+91${phone10}` },
+          { phone: phone10 },
+          { phone: `91${phone10}` },
+          { email },
+        ],
+        isDeleted: false,
+      }).select('+passwordHash');
+    } else {
+      user = await User.findOne({ email, isDeleted: false }).select('+passwordHash');
+    }
 
     // 3. Verify password with timing attack defense
     let passwordValid = false;

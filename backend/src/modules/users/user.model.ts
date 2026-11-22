@@ -174,4 +174,6 @@ const UserSchema = new Schema<IUser>(
   }
 );
 
+UserSchema.index({ phone: 1 });
+
 export const User = mongoose.model<IUser>('User', UserSchema);

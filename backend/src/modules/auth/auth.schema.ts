@@ -35,7 +35,10 @@ export const registerSchema = {
 export const loginSchema = {
   body: z
     .object({
-      email: z.string().email('Valid email address is required').toLowerCase(),
+      email: z
+        .string()
+        .min(3, 'Valid email or mobile number is required')
+        .max(100, 'Login identifier cannot exceed 100 characters'),
       password: z
         .string()
         .min(1, 'Password is required')
