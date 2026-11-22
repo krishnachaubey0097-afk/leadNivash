@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import { Inquiry } from './inquiry.model.js';
 import { Property } from '../properties/property.model.js';
 import { ActivityLog } from '../activity/activityLog.model.js';
+import { NotificationService } from '../notifications/notification.service.js';
 import { normalizePhoneE164 } from '../../utils/phone.js';
 import type { CreateInquiryDto } from './inquiry.schema.js';
 import { logger } from '../../services/logger.service.js';
@@ -49,19 +50,28 @@ export class InquiryService {
       status: 'new',
     });
 
-    // 6. Log Activity for broker (strictly NO PII: only property metadata)
+    // 6. Log Activity & Send Notification for broker
     try {
-      await ActivityLog.create({
-        userId: property.userId,
-        type: 'inquiry_received',
-        entityType: 'property',
-        entityId: property._id,
-        meta: {
-          propertyTitle: property.title || 'Property',
-        },
-      });
+      await Promise.all([
+        ActivityLog.create({
+          userId: property.userId,
+          type: 'inquiry_received',
+          entityType: 'property',
+          entityId: property._id,
+          meta: {
+            propertyTitle: property.title || 'Property',
+          },
+        }),
+        NotificationService.createNotification(
+          property.userId,
+          'New Client Inquiry Received',
+          `Direct buyer inquiry received for "${property.title}" from ${data.name.trim()}`,
+          'inquiry',
+          { propertyId: property._id.toString(), inquiryId: inquiry._id.toString() }
+        ),
+      ]);
     } catch (err: any) {
-      logger.warn(`Failed to create inquiry ActivityLog: ${err.message}`);
+      logger.warn(`Failed to create inquiry ActivityLog or Notification: ${err.message}`);
     }
 
     return {

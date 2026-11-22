@@ -356,3 +356,63 @@ Broker notifications & dashboard ───────────────�
 * `GET /api/v1/admin/usage` — View real-time system health, uptime, memory, online users (15m window), period active users (24h/7d/30d), module utilization breakdown, and recent audit events (`200 OK`).
 * `GET /api/v1/admin/inquiries` — View system-wide public property flyer inquiries (`200 OK`).
 * `GET /api/v1/admin/contacts` — View public landing page contact leads with honeypot validation (`200 OK`).
+
+---
+
+## 13. Notifications (`/api/v1/notifications`)
+
+Full lifecycle notifications bound strictly to the authenticated broker account.
+
+### 13.1 List Notifications
+* **Method & Path:** `GET /api/v1/notifications`
+* **Headers:** `Authorization: Bearer <accessToken>`
+* **Status:** `200 OK`
+* **Response Body:**
+  ```json
+  {
+    "success": true,
+    "data": {
+      "notifications": [
+        {
+          "id": "67...",
+          "title": "New Client Inquiry Received",
+          "message": "Direct buyer inquiry received for '3 BHK Luxury Floor'",
+          "type": "inquiry",
+          "isRead": false,
+          "data": { "propertyId": "..." },
+          "createdAt": "2026-11-22T14:20:00.000Z"
+        }
+      ],
+      "unreadCount": 1
+    }
+  }
+  ```
+
+### 13.2 Mark All Notifications Read
+* **Method & Path:** `PATCH /api/v1/notifications/read-all`
+* **Headers:** `Authorization: Bearer <accessToken>`
+* **Status:** `200 OK`
+* **Response Body:**
+  ```json
+  {
+    "success": true,
+    "data": {
+      "updatedCount": 1
+    }
+  }
+  ```
+
+### 13.3 Mark Single Notification Read
+* **Method & Path:** `PATCH /api/v1/notifications/:id/read`
+* **Headers:** `Authorization: Bearer <accessToken>`
+* **Status:** `200 OK`
+
+### 13.4 Delete Notification
+* **Method & Path:** `DELETE /api/v1/notifications/:id`
+* **Headers:** `Authorization: Bearer <accessToken>`
+* **Status:** `200 OK`
+
+### 13.5 Clear All Notifications
+* **Method & Path:** `DELETE /api/v1/notifications/clear-all`
+* **Headers:** `Authorization: Bearer <accessToken>`
+* **Status:** `200 OK`

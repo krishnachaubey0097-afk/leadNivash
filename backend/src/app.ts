@@ -24,6 +24,7 @@ import { inquiryRouter, brokerInquiryRouter } from './modules/inquiries/inquiry.
 import { adminRouter } from './modules/admin/admin.routes.js';
 import { trashRouter } from './modules/trash/trash.routes.js';
 import { publicContactRouter } from './modules/contact/contact.routes.js';
+import { notificationRouter } from './modules/notifications/notification.routes.js';
 import { handlePublicFlyer } from './modules/shares/publicFlyer.controller.js';
 
 export const app = express();
@@ -199,6 +200,7 @@ apiV1.use('/parse', parseRouter);
 apiV1.use('/shares', shareRouter);
 apiV1.use('/inquiries', brokerInquiryRouter);
 apiV1.use('/trash', trashRouter);
+apiV1.use('/notifications', notificationRouter);
 apiV1.use('/public/inquiries', inquiryRouter);
 apiV1.use('/public/contact', publicContactRouter);
 apiV1.use('/contact', publicContactRouter);

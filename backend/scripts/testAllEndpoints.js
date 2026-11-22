@@ -303,6 +303,12 @@ async function runTests() {
   await req('Admin: List Platform Inquiries', 'GET', '/api/v1/admin/inquiries', null, adminToken);
   await req('Admin: List Platform Contact Leads', 'GET', '/api/v1/admin/contacts', null, adminToken);
 
+  // --- 13. Notifications ---
+  console.log('\n--- Category 13: Notifications ---');
+  await req('List Broker Notifications', 'GET', '/api/v1/notifications', null, brokerToken);
+  await req('Mark All Notifications Read', 'PATCH', '/api/v1/notifications/read-all', null, brokerToken);
+  await req('Clear All Notifications', 'DELETE', '/api/v1/notifications/clear-all', null, brokerToken);
+
   console.log('\n====================================================');
   const total = results.length;
   const passed = results.filter(r => r.ok).length;

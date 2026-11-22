@@ -82,3 +82,10 @@ API Prefix: `/api/v1`
 - `GET /api/v1/admin/usage` - Platform API telemetry & resource consumption.
 - `GET /api/v1/admin/inquiries` - Platform-wide inquiry logs.
 - `GET /api/v1/admin/contacts` - Platform-wide contact requests.
+
+## 13. Notifications (`/api/v1/notifications`)
+- `GET /api/v1/notifications` - List authenticated broker notifications and unread count.
+- `PATCH /api/v1/notifications/read-all` - Mark all notifications as read.
+- `PATCH /api/v1/notifications/:id/read` - Mark single notification as read.
+- `DELETE /api/v1/notifications/:id` - Delete a specific notification.
+- `DELETE /api/v1/notifications/clear-all` - Clear all notifications for broker.
