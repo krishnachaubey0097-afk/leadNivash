@@ -10,6 +10,7 @@ export interface PlanLimits {
 export interface PlanConfig {
   name: string;
   priceINR: number;
+  trialUpgradePriceINR?: number;
   limits: PlanLimits;
 }
 
@@ -17,7 +18,7 @@ export type PlanTier = 'trial' | 'lite' | 'pro';
 
 export const PLAN_CONFIGS: Record<PlanTier, PlanConfig> = {
   trial: {
-    name: '14-Day Pilot Trial',
+    name: '14-Day Free Trial',
     priceINR: 0,
     limits: {
       maxListings: 15,
@@ -29,8 +30,8 @@ export const PLAN_CONFIGS: Record<PlanTier, PlanConfig> = {
     },
   },
   lite: {
-    name: 'Lite Starter',
-    priceINR: 1999,
+    name: 'Monthly Plan',
+    priceINR: 399,
     limits: {
       maxListings: 50,
       maxBuyers: 30,
@@ -41,8 +42,9 @@ export const PLAN_CONFIGS: Record<PlanTier, PlanConfig> = {
     },
   },
   pro: {
-    name: 'Founder Annual Pass',
+    name: 'Yearly Plan',
     priceINR: 3999,
+    trialUpgradePriceINR: 3299,
     limits: {
       maxListings: 10000, // Unlimited for solo brokers
       maxBuyers: 10000,
