@@ -126,11 +126,14 @@ export class AuthController {
       let sessionIdFromToken: string | undefined;
       const authHeader = req.headers.authorization;
       if (authHeader && authHeader.startsWith('Bearer ')) {
-        try {
-          const payload = verifyAccessToken(authHeader.split(' ')[1]);
-          sessionIdFromToken = payload.sessionId;
-        } catch {
-          // Token expired or invalid, continue with cookie invalidation
+        const token = authHeader.split(' ')[1];
+        if (token) {
+          try {
+            const payload = verifyAccessToken(token);
+            sessionIdFromToken = payload.sessionId;
+          } catch {
+            // Token expired or invalid, continue with cookie invalidation
+          }
         }
       }
 

@@ -272,6 +272,7 @@ export class AuthService {
     accessToken: string;
     newRefreshCookieValue: string;
     userId: string;
+    user?: any;
   }> {
     if (!cookieValue || !cookieValue.includes('.')) {
       const err: any = new Error('Refresh token missing or malformed');

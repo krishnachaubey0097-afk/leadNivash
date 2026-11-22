@@ -83,7 +83,26 @@ async function run() {
     },
   });
   await seedInitialData(broker._id);
-  logger.info('✅ Seeded demo broker & Model Town luxury kothi listing');
+
+  // Seed demo admin for testing
+  const adminHash = await bcrypt.hash('Admin@123456', 10);
+  await User.create({
+    name: 'System Administrator',
+    email: 'admin@leadnivesh.com',
+    passwordHash: adminHash,
+    phone: '+919999999999',
+    role: 'admin',
+    plan: {
+      tier: 'pro',
+      trialEndsAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
+      limits: getPlanLimits('pro'),
+    },
+    consent: {
+      termsAcceptedAt: new Date(),
+      privacyVersion: '1.0',
+    },
+  });
+  logger.info('✅ Seeded demo broker & admin users');
 
   startCronJobs();
 
