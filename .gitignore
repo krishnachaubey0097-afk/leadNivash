@@ -50,6 +50,7 @@ desktop.ini
 # Temporary / Scratch
 tmp/
 temp/
+audit_screenshots/
 
 .github/workflows/
 
