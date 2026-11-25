@@ -3,6 +3,7 @@ import { ContactController } from './contact.controller.js';
 import { validate } from '../../middleware/validate.js';
 import { publicLimiter } from '../../middleware/rateLimiter.js';
 import { requireAuth } from '../../middleware/requireAuth.js';
+import { roleGuard } from '../../middleware/roleGuard.js';
 import { createContactLeadSchema, listContactLeadsQuerySchema } from './contact.schema.js';
 
 export const publicContactRouter = Router();
@@ -14,10 +15,11 @@ publicContactRouter.post(
   ContactController.submit
 );
 
-// Authenticated brokers/admins can list contact leads submitted via landing page
+// Admin-only endpoint: list contact leads submitted via landing page (brokers receive 403)
 publicContactRouter.get(
   '/',
   requireAuth,
+  roleGuard('admin'),
   validate(listContactLeadsQuerySchema),
   ContactController.list
 );

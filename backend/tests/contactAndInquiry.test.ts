@@ -173,10 +173,26 @@ describe('Inquiry Redesign & Founder Contact Leads', () => {
     expect(adminRes.body.data.items.length).toBe(1);
     expect(adminRes.body.data.items[0].name).toBe('Anil Gupta');
 
-    // Non-admin is blocked with 403
+    // Non-admin is blocked with 403 on admin AND public contact listing routes
     const forbiddenRes = await request(app)
       .get('/api/v1/admin/contacts')
       .set('Authorization', `Bearer ${brokerToken}`);
     expect(forbiddenRes.status).toBe(403);
+
+    const forbiddenPublicContactRes = await request(app)
+      .get('/api/v1/public/contact')
+      .set('Authorization', `Bearer ${brokerToken}`);
+    expect(forbiddenPublicContactRes.status).toBe(403);
+
+    const forbiddenAliasContactRes = await request(app)
+      .get('/api/v1/contact')
+      .set('Authorization', `Bearer ${brokerToken}`);
+    expect(forbiddenAliasContactRes.status).toBe(403);
+
+    const adminPublicContactRes = await request(app)
+      .get('/api/v1/public/contact')
+      .set('Authorization', `Bearer ${adminToken}`);
+    expect(adminPublicContactRes.status).toBe(200);
+    expect(adminPublicContactRes.body.data.items.length).toBe(1);
   });
 });

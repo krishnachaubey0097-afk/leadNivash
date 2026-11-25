@@ -357,6 +357,8 @@ async function runSecuritySuite() {
     '/api/v1/admin/usage',
     '/api/v1/admin/inquiries',
     '/api/v1/admin/contacts',
+    '/api/v1/public/contact',
+    '/api/v1/contact',
   ];
 
   for (const path of adminEndpoints) {

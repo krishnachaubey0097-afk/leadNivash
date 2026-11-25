@@ -284,7 +284,7 @@ async function runTests() {
     phone: '+919876540001',
     message: 'Testing platform contact form via /contact alias.'
   });
-  await req('List Platform Contact Leads (Broker)', 'GET', '/api/v1/public/contact', null, brokerToken);
+  await req('List Platform Contact Leads (Admin)', 'GET', '/api/v1/public/contact', null, adminToken);
 
   // --- 11. Trash & Recovery ---
   console.log('\n--- Category 11: Trash & Recovery ---');

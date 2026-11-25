@@ -70,6 +70,7 @@ API Prefix: `/api/v1`
 - `POST /api/v1/public/inquiries` - Submit buyer lead from flyer: `{ propertyId, name, phone, message }`.
 - `GET /api/v1/inquiries` - Protected: broker view of incoming leads.
 - `POST /api/v1/public/contact` - Public platform landing page contact lead.
+- `GET /api/v1/public/contact` - Admin-only: list landing page contact leads (`403` for non-admin brokers).
 
 ### Category 11: Trash & Recovery
 - `GET /api/v1/trash` - List soft-deleted properties, buyers, and deals.
