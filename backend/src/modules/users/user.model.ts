@@ -26,10 +26,11 @@ export interface IUser extends Document {
     reraNo?: string;
   };
   preferences: {
-    language: 'en' | 'hi';
+    language: 'en' | 'hi' | 'pa' | 'ta' | 'mr';
     budgetTolerancePct: number;
     marlaToGaj: number;
     defaultCity: string;
+    defaultState: string;
   };
   plan: {
     tier: 'trial' | 'lite' | 'pro';
@@ -110,10 +111,11 @@ const UserSchema = new Schema<IUser>(
       reraNo: { type: String },
     },
     preferences: {
-      language: { type: String, enum: ['en', 'hi'], default: 'en' },
+      language: { type: String, enum: ['en', 'hi', 'pa', 'ta', 'mr'], default: 'en' },
       budgetTolerancePct: { type: Number, default: 10, min: 0, max: 50 },
       marlaToGaj: { type: Number, default: 30.25 },
       defaultCity: { type: String, default: 'Panipat' },
+      defaultState: { type: String, default: 'Haryana', trim: true },
     },
     plan: {
       tier: { type: String, enum: ['trial', 'lite', 'pro'], default: 'trial' },

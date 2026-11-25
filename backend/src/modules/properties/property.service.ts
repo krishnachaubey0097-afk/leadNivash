@@ -273,6 +273,38 @@ export class PropertyService {
   }
 
   /**
+   * Atomically increment property pitch / sent count when broker copies or shares details.
+   */
+  static async recordPitch(userId: string, id: string): Promise<{ _id: string; pitchCount: number }> {
+    await assertOwnership(Property, id, userId);
+    const updated = await Property.findOneAndUpdate(
+      { _id: id, userId, isDeleted: false },
+      { $inc: { pitchCount: 1 } },
+      { returnDocument: 'after' }
+    ).select('_id pitchCount');
+
+    if (!updated) {
+      const err: any = new Error('Resource not found');
+      err.statusCode = 404;
+      err.code = 'NOT_FOUND';
+      throw err;
+    }
+
+    await ActivityLog.create({
+      userId,
+      type: 'share_initiated',
+      entityType: 'property',
+      entityId: updated._id,
+      meta: { pitchCount: updated.pitchCount },
+    });
+
+    return {
+      _id: updated._id.toString(),
+      pitchCount: updated.pitchCount || 1,
+    };
+  }
+
+  /**
    * Soft delete property.
    */
   static async delete(userId: string, id: string): Promise<void> {

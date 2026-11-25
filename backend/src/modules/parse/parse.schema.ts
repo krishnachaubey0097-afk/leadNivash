@@ -5,7 +5,8 @@ export const parseInputSchema = {
     .object({
       rawText: z
         .string()
-        .min(5, 'Text must be at least 5 characters')
+        .trim()
+        .min(2, 'Text must be at least 2 characters')
         .max(5000, 'Text must not exceed 5000 characters'),
       marlaToGaj: z.number().positive().default(30.25).optional(),
     })

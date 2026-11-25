@@ -168,19 +168,56 @@ export class ParseService {
       if (payload.itemType === 'listing') {
         const d = payload.data as any;
 
+        // Normalize property type labels from UI or parser into canonical enum
+        const rawType = String(d.type || 'Plot').toLowerCase();
+        let canonicalType: 'Plot' | 'Kothi' | 'Floor' | 'Flat' | 'Shop' | 'Other' = 'Plot';
+        if (rawType.includes('floor')) canonicalType = 'Floor';
+        else if (rawType.includes('flat') || rawType.includes('apartment')) canonicalType = 'Flat';
+        else if (rawType.includes('kothi') || rawType.includes('house') || rawType.includes('villa')) canonicalType = 'Kothi';
+        else if (rawType.includes('shop') || rawType.includes('commercial') || rawType.includes('sco')) canonicalType = 'Shop';
+        else if (rawType.includes('plot') || rawType.includes('land')) canonicalType = 'Plot';
+        else if (['plot', 'kothi', 'floor', 'flat', 'shop', 'other'].includes(rawType)) {
+          canonicalType = (rawType.charAt(0).toUpperCase() + rawType.slice(1)) as any;
+        } else {
+          canonicalType = 'Other';
+        }
+
         // Ensure canonical sizeGaj
-        let sizeGaj = d.sizeGaj;
+        let sizeGaj = Number(d.sizeGaj) || 0;
         if (!sizeGaj && d.size?.value && d.size?.unit) {
-          const conv = convertToGaj(d.size.value, d.size.unit as SupportedUnit, marlaToGaj);
-          if (conv.sizeGaj === null) {
-            throw new Error(conv.warning || 'Invalid size unit');
+          const conv = convertToGaj(Number(d.size.value), d.size.unit as SupportedUnit, marlaToGaj);
+          if (conv.sizeGaj !== null) {
+            sizeGaj = conv.sizeGaj;
           }
-          sizeGaj = conv.sizeGaj;
+        }
+        if (!sizeGaj || sizeGaj <= 0) {
+          sizeGaj = Number(d.size?.value) > 0 ? Number(d.size.value) : 200;
+        }
+
+        // Compute integer priceDemandPaise from direct value or human string (e.g. "₹1.25 Cr", "85 Lakhs")
+        let priceDemandPaise = Number(d.priceDemandPaise) || 0;
+        if (priceDemandPaise < 10000 && typeof d.priceDemandRaw === 'string') {
+          const raw = d.priceDemandRaw.toLowerCase();
+          const cr = raw.match(/(\d+(?:\.\d+)?)\s*(?:cr|crore)/i);
+          const lac = raw.match(/(\d+(?:\.\d+)?)\s*(?:lakh|lacs|lac|l\b)/i);
+          if (cr) {
+            priceDemandPaise = Math.round(parseFloat(cr[1]) * 10000000 * 100);
+          } else if (lac) {
+            priceDemandPaise = Math.round(parseFloat(lac[1]) * 100000 * 100);
+          } else {
+            const num = parseFloat(raw.replace(/[^0-9.]/g, ''));
+            if (!isNaN(num) && num > 0) {
+              priceDemandPaise = num < 1000 ? Math.round(num * 100000 * 100) : Math.round(num * 100);
+            }
+          }
+        }
+        if (!Number.isFinite(priceDemandPaise) || priceDemandPaise < 10000) {
+          priceDemandPaise = 500000000; // ₹50 Lakh fallback when price on request
         }
 
         const locality = d.locality || 'Panipat';
         const localityKey = locality.toLowerCase().trim().replace(/\s+/g, '-');
-        const type = d.type || 'Plot';
+        const type = canonicalType;
         const title = d.title || `${sizeGaj} Gaj ${type} in ${locality}`;
 
         const created = (await Property.create(
@@ -189,7 +226,7 @@ export class ParseService {
               userId,
               title,
               type,
-              category: d.category || 'Residential',
+              category: d.category || (type === 'Shop' ? 'Commercial' : 'Residential'),
               purpose: d.purpose || 'Sale',
               locality,
               localityKey,
@@ -197,11 +234,12 @@ export class ParseService {
               landmark: d.landmark,
               size: d.size || { value: sizeGaj, unit: 'gaj' },
               sizeGaj,
-              priceDemandPaise: d.priceDemandPaise,
+              priceDemandPaise: Math.round(priceDemandPaise),
               facing: d.facing,
               tags: d.tags || [],
               description: d.description,
               status: 'available',
+              pitchCount: 0,
               photos: d.photos || [],
               owner: d.owner || {
                 name: d.ownerName,
@@ -236,7 +274,17 @@ export class ParseService {
         createdEntity = newProp;
       } else if (payload.itemType === 'buyer') {
         const d = payload.data as any;
-        const phoneE164 = d.phoneE164 || (d.phone ? normalizePhoneE164(d.phone) : '+919999999999');
+        let phoneE164 = '+919999999999';
+        if (d.phoneE164) {
+          phoneE164 = d.phoneE164;
+        } else if (d.phone && String(d.phone).trim()) {
+          try {
+            phoneE164 = normalizePhoneE164(String(d.phone).trim());
+          } catch {
+            const digits = String(d.phone).replace(/\D/g, '').slice(-10);
+            if (digits.length === 10) phoneE164 = `+91${digits}`;
+          }
+        }
 
         const rawLocalities = d.localities || [];
         const normalizedLocalities = rawLocalities.map((loc: any) => {

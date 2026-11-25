@@ -25,6 +25,7 @@ API Prefix: `/api/v1`
 - `GET /api/v1/properties/:id` - Get property by ID.
 - `PATCH /api/v1/properties/:id` - Update property fields.
 - `PATCH /api/v1/properties/:id/status` - Update status (`available`, `hold`, `sold`, `rented`).
+- `POST /api/v1/properties/:id/pitch` - Atomically increments property pitch/sent count (`pitchCount`).
 - `POST /api/v1/properties/:id/share` - Body: `{ template: "flyer" }`. Returns `{ token, url }`.
 - `GET /api/v1/properties/:id/matches` - Returns ranked matching buyers for this property.
 - `DELETE /api/v1/properties/:id` - Moves property to trash (soft delete).

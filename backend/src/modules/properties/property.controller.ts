@@ -114,6 +114,24 @@ export class PropertyController {
     }
   }
 
+  static async recordPitch(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const userId = req.user!._id;
+      const result = await PropertyController.handlePitch(userId, req.params.id as string);
+
+      res.status(200).json({
+        success: true,
+        data: result,
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  private static async handlePitch(userId: string, id: string) {
+    return PropertyService.recordPitch(userId, id);
+  }
+
   static async getMatches(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const userId = req.user!._id;

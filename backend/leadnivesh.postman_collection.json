@@ -484,8 +484,23 @@
                 }
               }
             },
-            "url": {
+          "url": {
               "raw": "{{baseUrl}}/api/v1/properties/{{propertyId}}/share"
+            }
+          }
+        },
+        {
+          "name": "Record Property Pitch (Increment Sent Count)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/properties/{{propertyId}}/pitch"
             }
           }
         },
@@ -1065,7 +1080,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Vikram Malhotra\",\n  \"phone\": \"+919876543210\",\n  \"agency\": {\n    \"name\": \"Malhotra Real Estate & Associates\",\n    \"city\": \"Panipat\",\n    \"reraNo\": \"HRERA-PKL-PNP-2023-089\"\n  },\n  \"preferences\": {\n    \"language\": \"en\",\n    \"budgetTolerancePct\": 15,\n    \"marlaToGaj\": 30.25,\n    \"defaultCity\": \"Panipat\"\n  }\n}",
+              "raw": "{\n  \"name\": \"Vikram Malhotra\",\n  \"phone\": \"+919876543210\",\n  \"agency\": {\n    \"name\": \"Malhotra Real Estate & Associates\",\n    \"city\": \"Panipat\",\n    \"reraNo\": \"HRERA-PKL-PNP-2023-089\"\n  },\n  \"preferences\": {\n    \"language\": \"en\",\n    \"budgetTolerancePct\": 15,\n    \"marlaToGaj\": 30.25,\n    \"defaultCity\": \"Panipat\",\n    \"defaultState\": \"Haryana\"\n  }\n}",
               "options": {
                 "raw": {
                   "language": "json"

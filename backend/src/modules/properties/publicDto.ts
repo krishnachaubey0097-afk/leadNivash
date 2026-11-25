@@ -22,6 +22,7 @@ export interface PublicPropertyDto {
   sizeGaj: number;
   priceDemandPaise: number;
   facing?: string;
+  pitchCount?: number;
   tags: string[];
   description?: string;
   photos: Array<{
@@ -67,6 +68,7 @@ export function toPublicProperty(
     sizeGaj: p.sizeGaj,
     priceDemandPaise: p.priceDemandPaise,
     facing: p.facing || undefined,
+    pitchCount: typeof p.pitchCount === 'number' ? p.pitchCount : 0,
     tags: Array.isArray(p.tags) ? [...p.tags] : [],
     description: p.description || undefined,
     photos: Array.isArray(p.photos)

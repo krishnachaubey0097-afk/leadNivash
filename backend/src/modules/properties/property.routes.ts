@@ -22,6 +22,7 @@ propertyRouter.post('/photos/sign', PropertyController.signPhotoUpload);
 propertyRouter.get('/:id', PropertyController.getById);
 propertyRouter.patch('/:id', validate(updatePropertySchema), PropertyController.update);
 propertyRouter.patch('/:id/status', validate(updatePropertyStatusSchema), PropertyController.updateStatus);
+propertyRouter.post('/:id/pitch', PropertyController.recordPitch);
 propertyRouter.post('/:id/share', validate(createShareSchema), ShareController.create);
 propertyRouter.delete('/:id/photos/{*publicId}', PropertyController.deletePhoto);
 propertyRouter.delete('/:id', PropertyController.delete);

@@ -141,6 +141,7 @@ async function runTests() {
     }
 
     await req('Get Matches for Property', 'GET', `/api/v1/properties/${testPropertyId}/matches`, null, brokerToken);
+    await req('Record Property Pitch', 'POST', `/api/v1/properties/${testPropertyId}/pitch`, null, brokerToken);
     await req('Sign Photo Upload', 'POST', '/api/v1/properties/photos/sign', null, brokerToken);
   }
 
@@ -254,7 +255,7 @@ async function runTests() {
   console.log('\n--- Category 09: User Profile ---');
   await req('Get Profile (Me)', 'GET', '/api/v1/users/me', null, brokerToken);
   await req('Update Profile', 'PATCH', '/api/v1/users/me', {
-    preferences: { budgetTolerancePct: 12, marlaToGaj: 30.25 }
+    preferences: { budgetTolerancePct: 12, marlaToGaj: 30.25, language: 'hi', defaultState: 'Haryana' }
   }, brokerToken);
   await req('Sign Logo Upload', 'POST', '/api/v1/users/me/logo/sign', null, brokerToken);
   await req('Export My Account Data', 'GET', '/api/v1/users/me/export', null, brokerToken);

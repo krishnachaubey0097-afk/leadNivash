@@ -46,6 +46,7 @@ export interface IProperty extends Document {
   tags: string[];
   description?: string;
   status: PropertyStatus;
+  pitchCount: number;
   photos: IPropertyPhoto[];
   video?: IPropertyVideo;
   videoUrl?: string;
@@ -157,6 +158,11 @@ const PropertySchema = new Schema<IProperty>(
       enum: ['available', 'hold', 'sold', 'rented'],
       default: 'available',
       index: true,
+    },
+    pitchCount: {
+      type: Number,
+      default: 0,
+      min: 0,
     },
     photos: {
       type: [PhotoSchema],

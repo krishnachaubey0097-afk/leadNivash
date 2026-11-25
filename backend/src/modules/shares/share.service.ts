@@ -37,6 +37,11 @@ export class ShareService {
       { upsert: true, returnDocument: 'after' }
     );
 
+    await Property.updateOne(
+      { _id: propertyId, userId },
+      { $inc: { pitchCount: 1 } }
+    );
+
     return {
       token,
       shareUrl: `/p/${token}`,

@@ -16,10 +16,11 @@ export const updateUserSchema = {
         .optional(),
       preferences: z
         .object({
-          language: z.enum(['en', 'hi']).optional(),
+          language: z.enum(['en', 'hi', 'pa', 'ta', 'mr']).optional(),
           budgetTolerancePct: z.number().min(0).max(50).optional(),
           marlaToGaj: z.number().positive().optional(),
           defaultCity: z.string().max(50).optional(),
+          defaultState: z.string().min(2).max(60).optional(),
         })
         .strict()
         .optional(),

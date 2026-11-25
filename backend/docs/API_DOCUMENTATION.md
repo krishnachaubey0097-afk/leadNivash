@@ -293,7 +293,8 @@ Broker notifications & dashboard ───────────────�
 * `PATCH /api/v1/properties/:id` — Update property attributes (price, size, description, photos) (`200 OK`).
 * `PATCH /api/v1/properties/:id/status` — Transition status (`available`, `hold`, `sold`, `rented`) (`200 OK`).
 * `DELETE /api/v1/properties/:id` — Soft-delete property to Trash (`200 OK`).
-* `POST /api/v1/properties/:id/share` — Generate signed public shareable link (`200 OK`).
+* `POST /api/v1/properties/:id/pitch` — Increment persisted client pitch/sent count (`pitchCount`) for a property (`200 OK`, `401`, `403`, `404`).
+* `POST /api/v1/properties/:id/share` — Generate signed public shareable link and increment `pitchCount` (`201 Created`).
 * `GET /api/v1/properties/:id/matches` — Find matching buyers for this property (`200 OK`).
 
 ### Category 03 — Buyers & Requirements
@@ -333,7 +334,7 @@ Broker notifications & dashboard ───────────────�
 
 ### Category 09 — User Profile & Broker Branding
 * `GET /api/v1/users/me` — Get current logged-in broker's profile and plan details (`200 OK`).
-* `PATCH /api/v1/users/me` — Update broker agency name, phone, or bio (`200 OK`).
+* `PATCH /api/v1/users/me` — Update broker agency name, phone, or regional preferences (`language`: `en`/`hi`/`pa`/`ta`/`mr`, `defaultState`, `defaultCity`, `marlaToGaj`, `budgetTolerancePct`) (`200 OK`).
 * `POST /api/v1/users/me/logo/sign` — Generate signed Cloudinary upload params for agency logo (`200 OK`).
 * `GET /api/v1/users/me/export` — Download full GDPR/data backup of all broker inventory, buyers, and deals as JSON (`200 OK`).
 * `DELETE /api/v1/users/me` — Permanently delete broker account and purge data (`200 OK`).
