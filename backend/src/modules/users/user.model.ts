@@ -1,12 +1,16 @@
 import mongoose, { Schema, type Document, type Types } from 'mongoose';
 import { getPlanLimits } from '../../config/plans.js';
 
+export type AuthProviderType = 'password' | 'google' | 'email_otp';
+
 export interface ISession {
   sessionId: string;
   refreshTokenHash: string;
   previousTokenHash?: string;
   previousHashExpiresAt?: Date;
   deviceLabel?: string;
+  authMethod?: AuthProviderType;
+  ip?: string;
   createdAt: Date;
   lastUsedAt: Date;
   expiresAt: Date;
@@ -19,6 +23,12 @@ export interface IUser extends Document {
   name: string;
   phone: string;
   role: 'user' | 'admin';
+  googleId?: string;
+  emailVerified: boolean;
+  hasPassword: boolean;
+  authProviders: AuthProviderType[];
+  lastLoginAt?: Date;
+  lastLoginMethod?: AuthProviderType;
   agency: {
     name: string;
     city: string;
@@ -67,6 +77,8 @@ const SessionSchema = new Schema<ISession>(
     previousTokenHash: { type: String },
     previousHashExpiresAt: { type: Date },
     deviceLabel: { type: String, default: 'Web Browser' },
+    authMethod: { type: String, enum: ['password', 'google', 'email_otp'], default: 'password' },
+    ip: { type: String },
     createdAt: { type: Date, default: Date.now },
     lastUsedAt: { type: Date, default: Date.now },
     expiresAt: { type: Date, required: true },
@@ -103,6 +115,32 @@ const UserSchema = new Schema<IUser>(
       type: String,
       enum: ['user', 'admin'],
       default: 'user',
+    },
+    googleId: {
+      type: String,
+      trim: true,
+      unique: true,
+      sparse: true,
+    },
+    emailVerified: {
+      type: Boolean,
+      default: false,
+    },
+    hasPassword: {
+      type: Boolean,
+      default: true,
+    },
+    authProviders: {
+      type: [String],
+      enum: ['password', 'google', 'email_otp'],
+      default: ['password'],
+    },
+    lastLoginAt: {
+      type: Date,
+    },
+    lastLoginMethod: {
+      type: String,
+      enum: ['password', 'google', 'email_otp'],
     },
     agency: {
       name: { type: String, default: '' },

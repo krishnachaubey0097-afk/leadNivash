@@ -56,6 +56,7 @@ async function runTests() {
 
   // --- 01. Authentication & Sessions ---
   console.log('\n--- Category 01: Authentication & Sessions ---');
+  await req('Get Auth Providers', 'GET', '/api/v1/auth/providers');
   const loginRes = await req('Broker Login', 'POST', '/api/v1/auth/login', {
     email: 'broker@leadnivesh.com',
     password: 'Broker@123456'
@@ -91,6 +92,18 @@ async function runTests() {
     agency: { name: 'Test Agency', city: 'Panipat', reraNo: 'HRERA-TEST-99' },
     consent: { termsAccepted: true, privacyVersion: '1.0' }
   });
+
+  const sendOtpRes = await req('Send Email OTP (Login)', 'POST', '/api/v1/auth/send-otp', {
+    email: randEmail,
+    purpose: 'login'
+  });
+  if (sendOtpRes.ok && sendOtpRes.data?.data?.devOtp) {
+    await req('Verify Email OTP (Login)', 'POST', '/api/v1/auth/verify-otp', {
+      email: randEmail,
+      otp: sendOtpRes.data.data.devOtp,
+      purpose: 'login'
+    });
+  }
 
   await req('List Active Sessions', 'GET', '/api/v1/auth/sessions', null, brokerToken);
   await req('Request Password Reset', 'POST', '/api/v1/auth/forgot-password', { email: 'broker@leadnivesh.com' });

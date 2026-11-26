@@ -10,10 +10,13 @@ import {
   forgotPasswordSchema,
   resetPasswordSchema,
   googleAuthSchema,
+  sendOtpSchema,
+  verifyOtpSchema,
 } from './auth.schema.js';
 
 export const authRouter = Router();
 
+authRouter.get('/providers', AuthController.getProviders);
 authRouter.post('/google', authLimiter, validate(googleAuthSchema), AuthController.googleAuth);
 
 authRouter.post('/register', authLimiter, validate(registerSchema), AuthController.register);
@@ -22,7 +25,7 @@ authRouter.get('/register', (_req, res) => {
     success: true,
     message: 'Register endpoint requires an HTTP POST request with a JSON body.',
     method: 'POST',
-    requiredFields: ['name', 'email', 'password', 'phone', 'consent']
+    requiredFields: ['name', 'email', 'password', 'phone', 'consent'],
   });
 });
 
@@ -35,16 +38,16 @@ authRouter.get('/login', (_req, res) => {
     endpoint: 'http://localhost:5000/api/v1/auth/login',
     testCredentials: {
       email: 'broker@leadnivesh.com',
-      password: 'Broker@123456'
+      password: 'Broker@123456',
     },
-    instructions: 'Send a POST request using Postman, curl, or your frontend application.'
+    instructions: 'Send a POST request using Postman, curl, or your frontend application.',
   });
 });
 authRouter.post('/refresh', AuthController.refresh);
 authRouter.post('/logout', AuthController.logout);
 
-authRouter.post('/send-otp', authLimiter, AuthController.sendOtp);
-authRouter.post('/verify-otp', authLimiter, AuthController.verifyOtp);
+authRouter.post('/send-otp', authLimiter, validate(sendOtpSchema), AuthController.sendOtp);
+authRouter.post('/verify-otp', authLimiter, validate(verifyOtpSchema), AuthController.verifyOtp);
 
 authRouter.post(
   '/forgot-password',
@@ -60,7 +63,6 @@ authRouter.post(
   AuthController.resetPassword
 );
 
-// Protected session endpoints
+// Protected session & login audit endpoints
 authRouter.get('/sessions', requireAuth, AuthController.listSessions);
 authRouter.delete('/sessions/:id', requireAuth, validate(revokeSessionSchema), AuthController.revokeSession);
-

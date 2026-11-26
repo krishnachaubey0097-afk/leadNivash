@@ -66,6 +66,69 @@ const collection = {
       name: '01 - Authentication & Sessions',
       item: [
         {
+          name: 'Get Auth Providers',
+          request: {
+            method: 'GET',
+            header: [],
+            url: { raw: '{{baseUrl}}/api/v1/auth/providers' },
+            description: 'Returns active Google OAuth & Email OTP provider capability flags.'
+          }
+        },
+        {
+          name: 'Google OAuth Sign-In / Sign-Up',
+          request: {
+            method: 'POST',
+            header: [{ key: 'Content-Type', value: 'application/json' }],
+            body: {
+              mode: 'raw',
+              raw: JSON.stringify({
+                accessToken: 'GOOGLE_OAUTH_ACCESS_TOKEN',
+                phone: '+919876543210',
+                agencyName: 'Sharma Realty',
+                city: 'Panipat'
+              }, null, 2),
+              options: { raw: { language: 'json' } }
+            },
+            url: { raw: '{{baseUrl}}/api/v1/auth/google' },
+            description: 'Verifies Google token against Google APIs, links/creates user in MongoDB, and issues session tokens.'
+          }
+        },
+        {
+          name: 'Send Email OTP',
+          request: {
+            method: 'POST',
+            header: [{ key: 'Content-Type', value: 'application/json' }],
+            body: {
+              mode: 'raw',
+              raw: JSON.stringify({
+                email: 'broker@leadnivesh.com',
+                purpose: 'login'
+              }, null, 2),
+              options: { raw: { language: 'json' } }
+            },
+            url: { raw: '{{baseUrl}}/api/v1/auth/send-otp' },
+            description: 'Generates 6-digit OTP stored hashed in MongoDB (10m TTL) and dispatches email.'
+          }
+        },
+        {
+          name: 'Verify Email OTP',
+          request: {
+            method: 'POST',
+            header: [{ key: 'Content-Type', value: 'application/json' }],
+            body: {
+              mode: 'raw',
+              raw: JSON.stringify({
+                email: 'broker@leadnivesh.com',
+                otp: '123456',
+                purpose: 'login'
+              }, null, 2),
+              options: { raw: { language: 'json' } }
+            },
+            url: { raw: '{{baseUrl}}/api/v1/auth/verify-otp' },
+            description: 'Verifies OTP against MongoDB and returns JWT access token + HttpOnly refresh cookie.'
+          }
+        },
+        {
           name: 'Login (Auto-saves accessToken)',
           event: [
             {

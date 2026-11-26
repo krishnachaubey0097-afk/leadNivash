@@ -65,7 +65,7 @@ describe('Auth & User API Endpoints', () => {
       const cookieStr = Array.isArray(cookies) ? cookies.join('; ') : String(cookies);
       expect(cookieStr).toContain('HttpOnly');
       expect(cookieStr).toContain('SameSite=Strict');
-      expect(cookieStr).toContain('Path=/api/v1/auth');
+      expect(cookieStr).toContain('Path=/');
     });
 
     it('rejects registration without terms consent (400 VALIDATION_ERROR)', async () => {

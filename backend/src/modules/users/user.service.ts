@@ -43,6 +43,12 @@ export class UserService {
         limits,
       },
       consent: user.consent,
+      emailVerified: Boolean(user.emailVerified),
+      hasPassword: user.hasPassword !== false,
+      authProviders: Array.isArray(user.authProviders) ? user.authProviders : ['password'],
+      hasGoogleLinked: Boolean(user.googleId),
+      lastLoginAt: user.lastLoginAt,
+      lastLoginMethod: user.lastLoginMethod,
       createdAt: user.createdAt,
     };
   }

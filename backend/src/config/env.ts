@@ -46,7 +46,7 @@ const envSchema = z.object({
   SMTP_PORT: z.string().optional().transform((val) => (val ? Number(val) : undefined)),
   SMTP_USER: z.string().optional(),
   SMTP_PASS: z.string().optional(),
-  SMTP_FROM: z.string().default('noreply@leadnivesh.com'),
+  SMTP_FROM: z.string().default('LeadNivash <leadnivash@gmail.com>'),
   EMAIL_FROM: z.string().optional(),
   FOUNDER_ALERT_EMAIL: z.string().optional(),
 

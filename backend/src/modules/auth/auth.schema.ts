@@ -47,6 +47,54 @@ export const loginSchema = {
     .strict(),
 };
 
+export const sendOtpSchema = {
+  body: z
+    .object({
+      email: z.string().email('Valid email address is required').toLowerCase().trim(),
+      purpose: z.enum(['login', 'register', 'verify_email']).default('login'),
+    })
+    .strict(),
+};
+
+export const verifyOtpSchema = {
+  body: z
+    .object({
+      email: z.string().email('Valid email address is required').toLowerCase().trim(),
+      otp: z
+        .string()
+        .trim()
+        .regex(/^\d{6}$/, 'Verification code must be 6 digits')
+        .optional(),
+      verificationToken: z.string().min(16).optional(),
+      purpose: z.enum(['login', 'register', 'verify_email']).default('login'),
+      name: z.string().min(2, 'Full name is required').max(100).optional(),
+      phone: z.string().min(10, 'Valid mobile number is required').max(20).optional(),
+      password: z.string().min(8, 'Password must be at least 8 characters').max(72).optional(),
+      agencyName: z.string().max(100).optional(),
+      city: z.string().max(50).optional(),
+      agency: z
+        .object({
+          name: z.string().max(100).optional(),
+          city: z.string().max(50).optional(),
+          reraNo: z.string().max(50).optional(),
+        })
+        .strict()
+        .optional(),
+      consent: z
+        .object({
+          termsAccepted: z.boolean(),
+          privacyVersion: z.string().default('1.0'),
+        })
+        .strict()
+        .optional(),
+    })
+    .strict()
+    .refine((data) => Boolean(data.otp || data.verificationToken), {
+      message: 'Verification code or token is required',
+      path: ['otp'],
+    }),
+};
+
 export const revokeSessionSchema = {
   params: z
     .object({
@@ -77,13 +125,29 @@ export const resetPasswordSchema = {
 export const googleAuthSchema = {
   body: z
     .object({
-      credential: z.string().optional(),
-      email: z.string().email('Valid email address is required').toLowerCase(),
-      name: z.string().min(1, 'Name is required').max(100),
+      credential: z.string().min(10).optional(),
+      accessToken: z.string().min(10).optional(),
+      email: z.string().email('Valid email address is required').toLowerCase().optional(),
+      name: z.string().min(1, 'Name is required').max(100).optional(),
       googleId: z.string().optional(),
       phone: z.string().optional(),
       agencyName: z.string().max(100).optional(),
       city: z.string().max(50).optional(),
+      agency: z
+        .object({
+          name: z.string().max(100).optional(),
+          city: z.string().max(50).optional(),
+          reraNo: z.string().max(50).optional(),
+        })
+        .strict()
+        .optional(),
+      consent: z
+        .object({
+          termsAccepted: z.boolean(),
+          privacyVersion: z.string().default('1.0'),
+        })
+        .strict()
+        .optional(),
     })
     .strict(),
 };

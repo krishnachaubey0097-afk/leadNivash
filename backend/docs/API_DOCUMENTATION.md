@@ -299,14 +299,17 @@ LeadSubmission audit + Notification alert ────────► Broker see
 * `GET /api/v1` — API root service status. Returns version `1.0.0`. (`200 OK`).
 
 ### Category 01 — Authentication & Session Management
+* `GET /api/v1/auth/providers` — Returns active auth provider capabilities (`googleEnabled`, `googleClientId`, `emailOtpEnabled`, `smtpConfigured`, `passwordEnabled`) (`200 OK`).
 * `POST /api/v1/auth/register` — Create new broker account with 30-day session (`201 Created`). Supports both nested `agency: { name, city, reraNo }` and root-level `agencyName`/`city` properties.
-* `POST /api/v1/auth/login` — Authenticate broker, issue access token & persistent httpOnly refresh cookie (`Path=/`, `Max-Age=30d`, `SameSite=None/Lax`) and `leadnivesh_logged_in` marker (`200 OK`).
-* `POST /api/v1/auth/google` — Google OAuth token exchange & account login/registration with mobile validation and session cookie (`200 OK`).
+* `POST /api/v1/auth/login` — Authenticate broker via email/mobile + password, issue access token, persistent httpOnly refresh cookie (`Path=/`, `Max-Age=30d`, `SameSite=None/Lax`), and `AuthLoginLog` audit record in MongoDB (`200 OK`, `401`, `429`).
+* `POST /api/v1/auth/google` — Verify Google OAuth `accessToken` or `credential` against Google APIs, link `googleId` seamlessly if email already exists in MongoDB, prompt `requiresPhone: true` for new accounts missing mobile number, and issue session cookies (`200 OK`, `401`, `403`).
+* `POST /api/v1/auth/send-otp` — Generate 6-digit OTP stored SHA-256 hashed in MongoDB (`EmailOtp` with 10-min TTL & 45s cooldown) for `purpose: "login" | "register" | "verify_email"` and send via configured SMTP (`200 OK`, `400`, `404`, `409`, `429`, `503`).
+* `POST /api/v1/auth/verify-otp` — Verify 6-digit OTP (max 5 attempts) or `verificationToken` in MongoDB. Logs existing accounts in immediately with JWT + session cookie + `AuthLoginLog`, or completes new-user onboarding (`name`, `phone`, optional `password`) (`200 OK`, `400`, `403`, `429`).
 * `POST /api/v1/auth/refresh` — Rotate refresh token (with 5-minute concurrency grace window) & issue fresh 15m access token (`200 OK`).
 * `POST /api/v1/auth/logout` — Invalidate session in DB and clear refresh & session marker cookies (`200 OK`).
 * `POST /api/v1/auth/forgot-password` — Issue password reset token via email (`200 OK`).
 * `POST /api/v1/auth/reset-password` — Set new password using reset token (`200 OK`).
-* `GET /api/v1/auth/sessions` — List all active login devices and IPs for the current broker (`200 OK`).
+* `GET /api/v1/auth/sessions` — List all active login devices, auth methods, and IPs for the current broker (`200 OK`).
 * `DELETE /api/v1/auth/sessions/:id` — Remote-revoke a specific session/device (`200 OK`).
 
 ### Category 02 — Property Inventory

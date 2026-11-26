@@ -11,9 +11,12 @@ API Prefix: `/api/v1`
 - `GET /api/v1` - API version and platform name.
 
 ### Category 01: Authentication & Sessions
+- `GET /api/v1/auth/providers` - Returns live auth provider capabilities (`googleEnabled`, `googleClientId`, `emailOtpEnabled`, `smtpConfigured`).
 - `POST /api/v1/auth/login` - Body: `{ email, password }`. Returns `{ accessToken, user }`.
 - `POST /api/v1/auth/register` - Body: `{ name, email, password, phone, agency, consent }`.
-- `POST /api/v1/auth/google` - Body: `{ idToken, phone, name }`. Returns `{ accessToken, user, requiresPhone }`.
+- `POST /api/v1/auth/google` - Body: `{ accessToken | credential, phone?, name?, agencyName?, city? }`. Links existing account by email or creates new Google user in MongoDB; returns `{ accessToken, user, requiresPhone }`.
+- `POST /api/v1/auth/send-otp` - Body: `{ email, purpose?: "login" | "register" }`. Stores hashed 6-digit OTP in MongoDB (`EmailOtp` TTL) and sends via SMTP.
+- `POST /api/v1/auth/verify-otp` - Body: `{ email, otp | verificationToken, purpose?, name?, phone?, password?, agencyName?, city?, consent? }`. Verifies OTP in MongoDB and issues session tokens or `{ requiresOnboarding: true, verificationToken }`.
 - `POST /api/v1/auth/refresh` - Issues new access token via httpOnly refresh cookie.
 - `POST /api/v1/auth/logout` - Revokes current refresh token session.
 - `GET /api/v1/auth/sessions` - List active sessions for authenticated user.

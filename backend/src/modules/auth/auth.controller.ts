@@ -61,10 +61,18 @@ function clearRefreshCookie(res: Response): void {
 }
 
 export class AuthController {
+  static getProviders(_req: Request, res: Response): void {
+    res.status(200).json({
+      success: true,
+      data: AuthService.getProviders(),
+    });
+  }
+
   static async register(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
+      const ip = req.ip || req.socket.remoteAddress || '127.0.0.1';
       const deviceLabel = req.headers['user-agent'] || 'Web Browser';
-      const result = await AuthService.register(req.body, deviceLabel);
+      const result = await AuthService.register(req.body, deviceLabel, ip);
 
       setRefreshCookie(res, result.refreshCookieValue);
 
@@ -231,15 +239,9 @@ export class AuthController {
 
   static async sendOtp(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const email = req.body.email;
-      if (!email || typeof email !== 'string') {
-        res.status(400).json({
-          success: false,
-          error: { code: 'VALIDATION_ERROR', message: 'Valid email is required.' },
-        });
-        return;
-      }
-      const result = await AuthService.sendOtp(email);
+      const { email, purpose } = req.body;
+      const ip = req.ip || req.socket.remoteAddress || '127.0.0.1';
+      const result = await AuthService.sendOtp(email, purpose, ip);
       res.status(200).json({
         success: true,
         data: result,
@@ -251,15 +253,23 @@ export class AuthController {
 
   static async verifyOtp(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { email, otp } = req.body;
-      if (!email || !otp) {
-        res.status(400).json({
-          success: false,
-          error: { code: 'VALIDATION_ERROR', message: 'Email and 6-digit code are required.' },
+      const ip = req.ip || req.socket.remoteAddress || '127.0.0.1';
+      const deviceLabel = req.headers['user-agent'] || 'Web Browser (Email OTP)';
+      const result = await AuthService.verifyOtp(req.body, ip, deviceLabel);
+
+      if ('accessToken' in result && result.accessToken) {
+        setRefreshCookie(res, result.refreshCookieValue);
+        res.status(200).json({
+          success: true,
+          data: {
+            verified: true,
+            accessToken: result.accessToken,
+            user: result.user,
+          },
         });
         return;
       }
-      const result = await AuthService.verifyOtp(email, otp);
+
       res.status(200).json({
         success: true,
         data: result,
@@ -271,7 +281,9 @@ export class AuthController {
 
   static async googleAuth(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const result = await AuthService.googleAuth(req.body, req.headers['user-agent']);
+      const ip = req.ip || req.socket.remoteAddress || '127.0.0.1';
+      const deviceLabel = req.headers['user-agent'] || 'Web Browser (Google Sign-In)';
+      const result = await AuthService.googleAuth(req.body, deviceLabel, ip);
       if (result.requiresPhone) {
         res.status(200).json({
           success: true,

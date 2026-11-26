@@ -86,6 +86,7 @@ export const updatePropertySchema = {
         .min(10000)
         .max(1000000000000)
         .optional(),
+      isApproxPrice: z.boolean().optional(),
       facing: z.string().max(50).optional(),
       tags: z.array(z.string().max(50)).max(10).optional(),
       description: z.string().max(2000).optional(),
@@ -102,10 +103,21 @@ export const updatePropertySchema = {
         )
         .max(4)
         .optional(),
+      video: z
+        .object({
+          url: z.string().url(),
+          publicId: z.string().optional(),
+          duration: z.number().optional(),
+          thumbnailUrl: z.string().url().optional(),
+        })
+        .strict()
+        .optional(),
+      videoUrl: z.string().url().optional(),
       owner: z
         .object({
           name: z.string().max(100).optional(),
           phone: z.string().max(30).optional(),
+          email: z.string().email().max(150).optional().or(z.literal('')),
           notes: z.string().max(1000).optional(),
         })
         .strict()
