@@ -22,6 +22,7 @@ export interface IPropertyVideo {
 export interface IOwnerVault {
   name?: string;
   phone?: string;
+  email?: string;
   notes?: string;
 }
 
@@ -42,6 +43,7 @@ export interface IProperty extends Document {
   };
   sizeGaj: number; // Canonical size in Gaj
   priceDemandPaise: number; // In integer paise
+  isApproxPrice?: boolean;
   facing?: string;
   tags: string[];
   description?: string;
@@ -51,7 +53,7 @@ export interface IProperty extends Document {
   video?: IPropertyVideo;
   videoUrl?: string;
   owner?: IOwnerVault; // Protected Owner Vault
-  source: 'manual' | 'paste';
+  source: 'manual' | 'paste' | 'lead_form';
   isDeleted: boolean;
   deletedAt?: Date;
   createdAt: Date;
@@ -72,6 +74,7 @@ const OwnerVaultSchema = new Schema<IOwnerVault>(
   {
     name: { type: String, trim: true },
     phone: { type: String, trim: true },
+    email: { type: String, trim: true, lowercase: true },
     notes: { type: String, trim: true },
   },
   { _id: false }
@@ -144,6 +147,10 @@ const PropertySchema = new Schema<IProperty>(
       max: 1000000000000, // Max ₹10,000 Crore
       index: true,
     },
+    isApproxPrice: {
+      type: Boolean,
+      default: false,
+    },
     facing: {
       type: String,
       trim: true,
@@ -185,7 +192,7 @@ const PropertySchema = new Schema<IProperty>(
     },
     source: {
       type: String,
-      enum: ['manual', 'paste'],
+      enum: ['manual', 'paste', 'lead_form'],
       default: 'manual',
     },
     isDeleted: {

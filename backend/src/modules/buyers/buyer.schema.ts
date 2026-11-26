@@ -18,6 +18,7 @@ export const createBuyerSchema = {
     .object({
       name: z.string().min(2, 'Name is required').max(100),
       phone: z.string().min(10, 'Valid phone number is required'),
+      email: z.string().email('Please enter a valid email address').max(150).optional().or(z.literal('')),
       localities: z.array(localityItemSchema).default([]),
       anyLocality: z.boolean().default(false),
       types: z.array(z.string()).default([]),
@@ -26,6 +27,7 @@ export const createBuyerSchema = {
         .object({
           minPaise: z.number().int().min(0).optional(),
           maxPaise: z.number().int().min(10000, 'Max budget must be at least ₹100'),
+          isApproximate: z.boolean().optional(),
         })
         .strict(),
       sizeGaj: z
@@ -39,7 +41,7 @@ export const createBuyerSchema = {
       status: z.enum(['active', 'paused', 'closed']).default('active'),
       notes: z.string().max(2000).optional(),
       rawText: z.string().max(4000).optional(),
-      source: z.enum(['manual', 'paste']).default('manual'),
+      source: z.enum(['manual', 'paste', 'lead_form']).default('manual'),
     })
     .strict(),
 };
@@ -49,6 +51,7 @@ export const updateBuyerSchema = {
     .object({
       name: z.string().min(2).max(100).optional(),
       phone: z.string().min(10).optional(),
+      email: z.string().email('Please enter a valid email address').max(150).optional().or(z.literal('')),
       localities: z.array(localityItemSchema).optional(),
       anyLocality: z.boolean().optional(),
       types: z.array(z.string()).optional(),
@@ -57,6 +60,7 @@ export const updateBuyerSchema = {
         .object({
           minPaise: z.number().int().min(0).optional(),
           maxPaise: z.number().int().min(10000),
+          isApproximate: z.boolean().optional(),
         })
         .strict()
         .optional(),

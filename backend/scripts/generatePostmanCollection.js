@@ -952,6 +952,51 @@ const collection = {
           }
         },
         {
+          name: 'Get Public Lead Form Broker Profile',
+          request: {
+            method: 'GET',
+            url: { raw: '{{baseUrl}}/api/v1/public/lead-form/{{brokerId}}' }
+          }
+        },
+        {
+          name: 'Submit Shared Lead Form (Buyer / Seller)',
+          request: {
+            method: 'POST',
+            header: [
+              { key: 'Content-Type', value: 'application/json' }
+            ],
+            body: {
+              mode: 'raw',
+              raw: JSON.stringify({
+                category: 'buyer',
+                name: 'Karan Malhotra',
+                phone: '+919812770011',
+                email: 'karan@example.com',
+                purpose: 'Sale',
+                budgetPaise: 1200000000,
+                isApproxBudget: true,
+                types: ['Floor', 'Flat'],
+                localities: ['Model Town', 'Sector 18'],
+                city: 'Panipat',
+                urgency: 'hot',
+                notes: 'Need 3 BHK park facing builder floor.'
+              }, null, 2),
+              options: { raw: { language: 'json' } }
+            },
+            url: { raw: '{{baseUrl}}/api/v1/public/lead-form/{{brokerId}}' }
+          }
+        },
+        {
+          name: 'List Broker Lead Form Submissions',
+          request: {
+            method: 'GET',
+            header: [
+              { key: 'Authorization', value: 'Bearer {{accessToken}}' }
+            ],
+            url: { raw: '{{baseUrl}}/api/v1/lead-form/submissions' }
+          }
+        },
+        {
           name: 'Revoke Share Link',
           request: {
             method: 'DELETE',

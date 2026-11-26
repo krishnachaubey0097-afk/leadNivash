@@ -62,6 +62,7 @@ export class PropertyService {
       size: data.size,
       sizeGaj,
       priceDemandPaise: data.priceDemandPaise,
+      isApproxPrice: Boolean(data.isApproxPrice),
       facing: data.facing?.trim(),
       tags: data.tags || [],
       description: data.description?.trim(),
@@ -71,6 +72,7 @@ export class PropertyService {
         ? {
             name: data.owner.name?.trim(),
             phone: data.owner.phone ? normalizePhoneE164(data.owner.phone) : undefined,
+            email: data.owner.email?.trim()?.toLowerCase() || undefined,
             notes: data.owner.notes?.trim(),
           }
         : undefined,

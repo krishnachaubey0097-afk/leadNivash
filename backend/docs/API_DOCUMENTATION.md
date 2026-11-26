@@ -265,9 +265,32 @@ Buyer fills inquiry form ──────────────────�
 Broker notifications & dashboard ─────────────────► GET /api/v1/inquiries
 ```
 
+### 3.5 Scenario 5: Shared Client Lead Generation Form (Buyer & Seller)
+```
+Broker clicks "Share Form" (Buyers or Properties) ─► Copies/WhatsApps /form/:brokerId
+                                                          │
+                                                          ▼
+Client opens shared form ─────────────────────────► GET /api/v1/public/lead-form/:brokerId
+                                                          │  (Returns agency card + contact CTA)
+                                                          ▼
+Client selects Buyer or Seller & fills fields ────► POST /api/v1/public/lead-form/:brokerId
+(Name*, Mobile*, Budget* + Approx toggle, Specs)          │
+                                                    ┌─────┴─────────────────────────────┐
+                                                    │ Category === 'buyer'              │
+                                                    │ ➔ Creates Buyer (source:lead_form)│
+                                                    │ ➔ +Approx ±15% budget bounds      │
+                                                    ├───────────────────────────────────┤
+                                                    │ Category === 'seller'             │
+                                                    │ ➔ Creates Property (Owner Vault)  │
+                                                    └─────┬─────────────────────────────┘
+                                                          │
+                                                          ▼
+LeadSubmission audit + Notification alert ────────► Broker sees lead in Buyers/Properties & calls back
+```
+
 ---
 
-## 4. Endpoints Master Directory (13 Categories / 59 Endpoints)
+## 4. Endpoints Master Directory (13 Categories / 62 Endpoints)
 
 ### Category 00 — Health & Probes
 * `GET /` — Root Welcome Info. Returns API status, version `1.0.0`, probes, and resource endpoints (`200 OK`).
@@ -342,6 +365,9 @@ Broker notifications & dashboard ───────────────�
 ### Category 10 — Public Endpoints & Consumer Inquiries
 * `GET /p/:token` — Render branded public property flyer webpage for consumers (`200 OK`).
 * `POST /api/v1/public/inquiries` — Public endpoint: consumer submits property inquiry (`201 Created`).
+* `GET /api/v1/public/lead-form/:brokerId` — Public endpoint: fetch non-sensitive agency/broker banner profile for the shared Client Lead Generation Form (`200 OK`, `400 Bad Request` invalid ID, `404 Not Found` if inactive/missing, `429 Too Many Requests`, `500 Server Error`).
+* `POST /api/v1/public/lead-form/:brokerId` — Public endpoint: submit dynamic **Buyer** or **Seller** lead form (`201 Created`, `400 Bad Request` validation errors in standard `{ success: false, error: { code, message, fields } }`, `404 Not Found`, `429 Too Many Requests`, `500 Server Error`). Includes `isApproxBudget` (`±15%` flexible range), honeypot bot filtering, auto-creation of `Buyer` or `Property` (`source: "lead_form"`), `LeadSubmission`, and broker notification.
+* `GET /api/v1/lead-form/submissions` — Protected endpoint: list broker's submitted shared lead form entries (`200 OK`, `401 Unauthorized`, `500 Server Error`).
 * `POST /api/v1/public/contact` (alias `POST /api/v1/contact`) — Public landing page contact/demo lead form (`201 Created`).
 * `GET /api/v1/public/contact` (alias `GET /api/v1/contact`) — Admin-only endpoint (`requireAuth` + `roleGuard('admin')`): view landing page contact leads (`200 OK`, `403 Forbidden` for non-admin brokers). Use `GET /api/v1/admin/contacts` in the Admin Console.
 * `GET /api/v1/inquiries` — Broker endpoint: view inquiries received on owned properties (`200 OK`).

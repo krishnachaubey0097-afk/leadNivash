@@ -484,23 +484,8 @@
                 }
               }
             },
-          "url": {
-              "raw": "{{baseUrl}}/api/v1/properties/{{propertyId}}/share"
-            }
-          }
-        },
-        {
-          "name": "Record Property Pitch (Increment Sent Count)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{accessToken}}"
-              }
-            ],
             "url": {
-              "raw": "{{baseUrl}}/api/v1/properties/{{propertyId}}/pitch"
+              "raw": "{{baseUrl}}/api/v1/properties/{{propertyId}}/share"
             }
           }
         },
@@ -859,7 +844,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"amountPaise\": 5000000,\n  \"note\": \"Token advance commission received via NEFT\",\n  \"receivedAt\": \"2026-11-21T19:25:40.367Z\"\n}",
+              "raw": "{\n  \"amountPaise\": 5000000,\n  \"note\": \"Token advance commission received via NEFT\",\n  \"receivedAt\": \"2026-11-26T14:31:56.826Z\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1080,7 +1065,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Vikram Malhotra\",\n  \"phone\": \"+919876543210\",\n  \"agency\": {\n    \"name\": \"Malhotra Real Estate & Associates\",\n    \"city\": \"Panipat\",\n    \"reraNo\": \"HRERA-PKL-PNP-2023-089\"\n  },\n  \"preferences\": {\n    \"language\": \"en\",\n    \"budgetTolerancePct\": 15,\n    \"marlaToGaj\": 30.25,\n    \"defaultCity\": \"Panipat\",\n    \"defaultState\": \"Haryana\"\n  }\n}",
+              "raw": "{\n  \"name\": \"Vikram Malhotra\",\n  \"phone\": \"+919876543210\",\n  \"agency\": {\n    \"name\": \"Malhotra Real Estate & Associates\",\n    \"city\": \"Panipat\",\n    \"reraNo\": \"HRERA-PKL-PNP-2023-089\"\n  },\n  \"preferences\": {\n    \"language\": \"en\",\n    \"budgetTolerancePct\": 15,\n    \"marlaToGaj\": 30.25,\n    \"defaultCity\": \"Panipat\"\n  }\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1201,6 +1186,54 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/v1/public/contact"
+            }
+          }
+        },
+        {
+          "name": "Get Public Lead Form Broker Profile",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/public/lead-form/{{brokerId}}"
+            }
+          }
+        },
+        {
+          "name": "Submit Shared Lead Form (Buyer / Seller)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category\": \"buyer\",\n  \"name\": \"Karan Malhotra\",\n  \"phone\": \"+919812770011\",\n  \"email\": \"karan@example.com\",\n  \"purpose\": \"Sale\",\n  \"budgetPaise\": 1200000000,\n  \"isApproxBudget\": true,\n  \"types\": [\n    \"Floor\",\n    \"Flat\"\n  ],\n  \"localities\": [\n    \"Model Town\",\n    \"Sector 18\"\n  ],\n  \"city\": \"Panipat\",\n  \"urgency\": \"hot\",\n  \"notes\": \"Need 3 BHK park facing builder floor.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/public/lead-form/{{brokerId}}"
+            }
+          }
+        },
+        {
+          "name": "List Broker Lead Form Submissions",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/lead-form/submissions"
             }
           }
         },

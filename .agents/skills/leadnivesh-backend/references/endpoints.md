@@ -70,6 +70,9 @@ API Prefix: `/api/v1`
 - `GET /p/:token` - Public mobile-friendly property flyer HTML page.
 - `POST /api/v1/public/inquiries` - Submit buyer lead from flyer: `{ propertyId, name, phone, message }`.
 - `GET /api/v1/inquiries` - Protected: broker view of incoming leads.
+- `GET /api/v1/public/lead-form/:brokerId` - Public: fetch safe broker/agency card for a shared Client Lead Generation Form.
+- `POST /api/v1/public/lead-form/:brokerId` - Public: submit dynamic Buyer or Seller lead form (with approximate budget flag); automatically creates `Buyer`/`Property` (`source: "lead_form"`), `LeadSubmission`, and broker notification.
+- `GET /api/v1/lead-form/submissions` - Protected: list form leads captured via the broker's shared link.
 - `POST /api/v1/public/contact` - Public platform landing page contact lead.
 - `GET /api/v1/public/contact` - Admin-only: list landing page contact leads (`403` for non-admin brokers).
 

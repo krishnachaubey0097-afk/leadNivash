@@ -24,6 +24,7 @@ export class BuyerService {
       userId,
       name: data.name.trim(),
       phoneE164,
+      email: data.email?.trim()?.toLowerCase() || undefined,
       localities: data.localities || [],
       anyLocality: !!data.anyLocality,
       types: data.types || [],
@@ -100,6 +101,7 @@ export class BuyerService {
 
     if (data.name) buyer.name = data.name.trim();
     if (data.phone) buyer.phoneE164 = normalizePhoneE164(data.phone);
+    if (data.email !== undefined) buyer.email = data.email?.trim()?.toLowerCase() || undefined;
     if (data.localities) buyer.localities = data.localities;
     if (data.anyLocality !== undefined) buyer.anyLocality = data.anyLocality;
     if (data.types) buyer.types = data.types;

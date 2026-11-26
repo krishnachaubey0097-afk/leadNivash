@@ -21,6 +21,7 @@ export const createPropertySchema = {
         .int('Price must be an integer in paise')
         .min(10000, 'Price must be at least ₹100')
         .max(1000000000000, 'Price exceeds maximum allowable bound'),
+      isApproxPrice: z.boolean().optional(),
       facing: z.string().max(50).optional(),
       tags: z.array(z.string().max(50)).max(10).optional(),
       description: z.string().max(2000).optional(),
@@ -52,11 +53,12 @@ export const createPropertySchema = {
         .object({
           name: z.string().max(100).optional(),
           phone: z.string().max(30).optional(),
+          email: z.string().email().max(150).optional().or(z.literal('')),
           notes: z.string().max(1000).optional(),
         })
         .strict()
         .optional(),
-      source: z.enum(['manual', 'paste']).default('manual'),
+      source: z.enum(['manual', 'paste', 'lead_form']).default('manual'),
     })
     .strict(),
 };

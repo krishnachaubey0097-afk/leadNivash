@@ -10,6 +10,7 @@ export interface IBuyer extends Document {
   userId: Types.ObjectId;
   name: string;
   phoneE164: string;
+  email?: string;
   localities: IBuyerLocality[];
   anyLocality: boolean; // Must be explicitly true to match any locality
   types: string[]; // ['Plot', 'Kothi', etc.]
@@ -17,6 +18,7 @@ export interface IBuyer extends Document {
   budget: {
     minPaise?: number;
     maxPaise: number;
+    isApproximate?: boolean;
   };
   sizeGaj?: {
     min?: number;
@@ -27,7 +29,7 @@ export interface IBuyer extends Document {
   notes?: string;
   rawText?: string;
   lastContactedAt?: Date;
-  source: 'manual' | 'paste';
+  source: 'manual' | 'paste' | 'lead_form';
   isDeleted: boolean;
   deletedAt?: Date;
   createdAt: Date;
@@ -61,6 +63,11 @@ const BuyerSchema = new Schema<IBuyer>(
       trim: true,
       index: true,
     },
+    email: {
+      type: String,
+      trim: true,
+      lowercase: true,
+    },
     localities: [BuyerLocalitySchema],
     anyLocality: {
       type: Boolean,
@@ -75,6 +82,7 @@ const BuyerSchema = new Schema<IBuyer>(
     budget: {
       minPaise: { type: Number, min: 0 },
       maxPaise: { type: Number, required: true, min: 10000 },
+      isApproximate: { type: Boolean, default: false },
     },
     sizeGaj: {
       min: { type: Number, min: 0 },
@@ -96,7 +104,7 @@ const BuyerSchema = new Schema<IBuyer>(
     lastContactedAt: { type: Date },
     source: {
       type: String,
-      enum: ['manual', 'paste'],
+      enum: ['manual', 'paste', 'lead_form'],
       default: 'manual',
     },
     isDeleted: {

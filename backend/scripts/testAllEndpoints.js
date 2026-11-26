@@ -62,6 +62,7 @@ async function runTests() {
   });
   if (loginRes.ok && loginRes.data?.data?.accessToken) {
     brokerToken = loginRes.data.data.accessToken;
+    var brokerIdForForm = loginRes.data?.data?.user?.id || loginRes.data?.data?.user?._id || '';
   }
 
   const adminLoginRes = await req('Admin Login', 'POST', '/api/v1/auth/login', {
@@ -274,6 +275,42 @@ async function runTests() {
     });
   }
   await req('List Received Inquiries', 'GET', '/api/v1/inquiries', null, brokerToken);
+  if (typeof brokerIdForForm !== 'undefined' && brokerIdForForm) {
+    await req('Get Public Lead Form Broker Profile', 'GET', `/api/v1/public/lead-form/${brokerIdForForm}`);
+    await req('Submit Shared Lead Form (Buyer)', 'POST', `/api/v1/public/lead-form/${brokerIdForForm}`, {
+      category: 'buyer',
+      name: 'Karan Malhotra',
+      phone: '+919812770011',
+      email: 'karan.malhotra@example.com',
+      purpose: 'Sale',
+      budgetPaise: 1200000000,
+      isApproxBudget: true,
+      types: ['Floor', 'Flat'],
+      localities: ['Model Town', 'Sector 18'],
+      city: 'Panipat',
+      urgency: 'hot',
+      notes: 'Looking for park-facing 3 BHK floor with lift.',
+    });
+    await req('Submit Shared Lead Form (Seller)', 'POST', `/api/v1/public/lead-form/${brokerIdForForm}`, {
+      category: 'seller',
+      name: 'Sukhbir Singh',
+      phone: '+919812770022',
+      email: 'sukhbir@example.com',
+      purpose: 'Sale',
+      propertyCategory: 'Residential',
+      propertyType: 'Plot',
+      locality: 'Sector 18',
+      city: 'Panipat',
+      sizeValue: 250,
+      sizeUnit: 'gaj',
+      budgetPaise: 1750000000,
+      isApproxBudget: true,
+      facing: 'East',
+      highlights: ['Park Facing', 'Corner'],
+      notes: 'Clear registry, immediate transfer ready.',
+    });
+    await req('List Broker Lead Form Submissions', 'GET', '/api/v1/lead-form/submissions', null, brokerToken);
+  }
   await req('Submit Platform Contact Form', 'POST', '/api/v1/public/contact', {
     name: 'Amitabh Sen',
     email: 'amitabh.sen@example.com',
