@@ -1182,6 +1182,68 @@ const collection = {
           }
         }
       ]
+    },
+
+    // 14. Cashfree Payments & AutoPay Subscriptions
+    {
+      name: '14 - Cashfree Payments & AutoPay',
+      item: [
+        {
+          name: 'Get Payment Gateway Config',
+          request: {
+            method: 'GET',
+            header: [],
+            url: { raw: '{{baseUrl}}/api/v1/payments/config' }
+          }
+        },
+        {
+          name: 'Create Cashfree Checkout Session (AutoPay / Order)',
+          request: {
+            method: 'POST',
+            header: [
+              { key: 'Content-Type', value: 'application/json' },
+              { key: 'Authorization', value: 'Bearer {{accessToken}}' }
+            ],
+            body: {
+              mode: 'raw',
+              raw: JSON.stringify({
+                planCode: 'monthly_399',
+                mode: 'autopay'
+              }, null, 2),
+              options: { raw: { language: 'json' } }
+            },
+            url: { raw: '{{baseUrl}}/api/v1/payments/cashfree/checkout' }
+          }
+        },
+        {
+          name: 'Verify Cashfree Payment',
+          request: {
+            method: 'POST',
+            header: [
+              { key: 'Content-Type', value: 'application/json' },
+              { key: 'Authorization', value: 'Bearer {{accessToken}}' }
+            ],
+            body: {
+              mode: 'raw',
+              raw: JSON.stringify({
+                subscriptionId: 'sub_example_123'
+              }, null, 2),
+              options: { raw: { language: 'json' } }
+            },
+            url: { raw: '{{baseUrl}}/api/v1/payments/cashfree/verify' }
+          }
+        },
+        {
+          name: 'Get Broker Billing History',
+          request: {
+            method: 'GET',
+            header: [
+              { key: 'Authorization', value: 'Bearer {{accessToken}}' }
+            ],
+            url: { raw: '{{baseUrl}}/api/v1/payments/history' }
+          }
+        }
+      ]
     }
   ]
 };

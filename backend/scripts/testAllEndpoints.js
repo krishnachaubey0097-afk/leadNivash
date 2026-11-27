@@ -360,6 +360,11 @@ async function runTests() {
   await req('Mark All Notifications Read', 'PATCH', '/api/v1/notifications/read-all', null, brokerToken);
   await req('Clear All Notifications', 'DELETE', '/api/v1/notifications/clear-all', null, brokerToken);
 
+  // --- 14. Cashfree Payments & AutoPay ---
+  console.log('\n--- Category 14: Cashfree Payments & AutoPay ---');
+  await req('Get Cashfree Config', 'GET', '/api/v1/payments/config');
+  await req('List Payment History', 'GET', '/api/v1/payments/history', null, brokerToken);
+
   console.log('\n====================================================');
   const total = results.length;
   const passed = results.filter(r => r.ok).length;

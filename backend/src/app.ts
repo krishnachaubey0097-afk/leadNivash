@@ -26,6 +26,7 @@ import { adminRouter } from './modules/admin/admin.routes.js';
 import { trashRouter } from './modules/trash/trash.routes.js';
 import { publicContactRouter } from './modules/contact/contact.routes.js';
 import { notificationRouter } from './modules/notifications/notification.routes.js';
+import { paymentRouter } from './modules/payments/payment.routes.js';
 import { handlePublicFlyer } from './modules/shares/publicFlyer.controller.js';
 
 export const app = express();
@@ -98,8 +99,15 @@ app.use(
 // 3. Response Compression (Gzip / Deflate for fast mobile 2G/3G load speeds)
 app.use(compression());
 
-// 4. Body parsers
-app.use(express.json({ limit: '50kb' }));
+// 4. Body parsers (capture rawBody for Cashfree webhook HMAC-SHA256 verification)
+app.use(
+  express.json({
+    limit: '50kb',
+    verify: (req: any, _res, buf) => {
+      req.rawBody = buf.toString('utf8');
+    },
+  })
+);
 app.use(express.urlencoded({ extended: true, limit: '50kb' }));
 app.use(cookieParser());
 
@@ -203,6 +211,7 @@ apiV1.use('/inquiries', brokerInquiryRouter);
 apiV1.use('/lead-form', brokerLeadFormRouter);
 apiV1.use('/trash', trashRouter);
 apiV1.use('/notifications', notificationRouter);
+apiV1.use('/payments', paymentRouter);
 apiV1.use('/public/inquiries', inquiryRouter);
 apiV1.use('/public/lead-form', publicLeadFormRouter);
 apiV1.use('/public/contact', publicContactRouter);

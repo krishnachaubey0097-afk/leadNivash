@@ -97,3 +97,11 @@ API Prefix: `/api/v1`
 - `PATCH /api/v1/notifications/:id/read` - Mark single notification as read.
 - `DELETE /api/v1/notifications/:id` - Delete a specific notification.
 - `DELETE /api/v1/notifications/clear-all` - Clear all notifications for broker.
+
+## 14. Cashfree Payments & AutoPay (`/api/v1/payments`)
+- `GET /api/v1/payments/config` - Public gateway mode (`sandbox`/`production`) and subscription plan catalog.
+- `POST /api/v1/payments/cashfree/checkout` - Create Cashfree AutoPay subscription or one-time PG order session (`planCode`, `mode`).
+- `POST /api/v1/payments/cashfree/verify` - Verify return `subscriptionId` or `orderId` and upgrade broker plan in MongoDB.
+- `POST /api/v1/payments/cashfree/cancel` - Cancel active Cashfree AutoPay renewal.
+- `GET /api/v1/payments/history` - List broker payment & subscription records.
+- `POST /api/v1/payments/cashfree/webhook` - HMAC-SHA256 verified Cashfree AutoPay & order webhook.

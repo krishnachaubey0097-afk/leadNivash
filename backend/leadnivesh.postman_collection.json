@@ -930,7 +930,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"amountPaise\": 5000000,\n  \"note\": \"Token advance commission received via NEFT\",\n  \"receivedAt\": \"2026-11-26T18:51:35.376Z\"\n}",
+              "raw": "{\n  \"amountPaise\": 5000000,\n  \"note\": \"Token advance commission received via NEFT\",\n  \"receivedAt\": \"2026-11-27T20:35:12.652Z\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1493,6 +1493,92 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/api/v1/admin/contacts"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "14 - Cashfree Payments & AutoPay",
+      "item": [
+        {
+          "name": "Get Payment Gateway Config",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/payments/config"
+            }
+          }
+        },
+        {
+          "name": "Create Cashfree Checkout Session (AutoPay / Order)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"planCode\": \"monthly_399\",\n  \"mode\": \"autopay\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/payments/cashfree/checkout"
+            }
+          }
+        },
+        {
+          "name": "Verify Cashfree Payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"subscriptionId\": \"sub_example_123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/payments/cashfree/verify"
+            }
+          }
+        },
+        {
+          "name": "Get Broker Billing History",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/payments/history"
             }
           }
         }

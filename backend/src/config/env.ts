@@ -58,6 +58,15 @@ const envSchema = z.object({
   // Plan defaults
   TRIAL_DAYS: z.string().default('14').transform(Number),
 
+  // Cashfree Payment Gateway & AutoPay Subscriptions
+  CASHFREE_ENV: z.enum(['sandbox', 'production']).optional(),
+  CASHFREE_APP_ID: z.string().optional(),
+  CASHFREE_CLIENT_ID: z.string().optional(),
+  CASHFREE_SECRET_KEY: z.string().optional(),
+  CASHFREE_CLIENT_SECRET: z.string().optional(),
+  CASHFREE_WEBHOOK_SECRET: z.string().optional(),
+  CASHFREE_API_VERSION: z.string().default('2023-08-01'),
+
   // Sentry
   SENTRY_DSN: z.string().optional(),
 });

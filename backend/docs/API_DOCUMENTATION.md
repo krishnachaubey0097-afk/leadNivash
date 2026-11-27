@@ -446,3 +446,46 @@ Full lifecycle notifications bound strictly to the authenticated broker account.
 * **Method & Path:** `DELETE /api/v1/notifications/clear-all`
 * **Headers:** `Authorization: Bearer <accessToken>`
 * **Status:** `200 OK`
+
+---
+
+## 14. Cashfree Payments & AutoPay Subscriptions (`/api/v1/payments`)
+
+### 14.1 Get Public Cashfree Config & Plan Catalog
+* **Method & Path:** `GET /api/v1/payments/config`
+* **Status:** `200 OK`
+* **Response Body:** `{ "success": true, "data": { "cashfreeEnabled": true, "mode": "sandbox" | "production", "subscriptionsEnabled": true, "plans": [...] } }`
+
+### 14.2 Create Cashfree AutoPay Subscription or Order Checkout Session
+* **Method & Path:** `POST /api/v1/payments/cashfree/checkout`
+* **Headers:** `Authorization: Bearer <accessToken>`
+* **Body:** `{ "planCode": "monthly_399" | "yearly_trial_3299" | "yearly_3999", "mode": "autopay" | "one_time", "returnOrigin"?: "https://..." }`
+* **Status Codes:** `200 OK`, `400`, `401`, `404`, `502`, `503`
+* **Response Body:** Returns `{ flow: "subscription" | "order", sessionId, subscriptionId?, orderId?, checkoutMode, amountINR }` and saves `PaymentRecord` in MongoDB.
+
+### 14.3 Verify Cashfree Payment / Subscription Return
+* **Method & Path:** `POST /api/v1/payments/cashfree/verify`
+* **Headers:** `Authorization: Bearer <accessToken>`
+* **Body:** `{ "subscriptionId"?: "sub_...", "orderId"?: "ord_..." }`
+* **Status Codes:** `200 OK`, `400`, `401`, `404`, `502`
+* **Lifecycle:** Queries Cashfree status directly and activates `lite` or `pro` tier + expiry in MongoDB `User.plan` immediately upon `ACTIVE` or `PAID`.
+
+### 14.4 Cancel Cashfree AutoPay Subscription
+* **Method & Path:** `POST /api/v1/payments/cashfree/cancel`
+* **Headers:** `Authorization: Bearer <accessToken>`
+* **Body:** `{ "subscriptionId": "sub_..." }`
+* **Status Codes:** `200 OK`, `400`, `401`, `404`, `502`
+
+### 14.5 Cashfree HMAC-SHA256 Webhook
+* **Method & Path:** `POST /api/v1/payments/cashfree/webhook`
+* **Headers:** `x-webhook-signature`, `x-webhook-timestamp`
+* **Status Codes:** `200 OK`, `401 INVALID_WEBHOOK_SIGNATURE`
+* **Lifecycle:** Verifies Cashfree signature against raw JSON body and automatically activates/extends `User.plan` on initial payment and recurring AutoPay renewals.
+
+### 14.6 List Broker Billing History
+* **Method & Path:** `GET /api/v1/payments/history`
+* **Headers:** `Authorization: Bearer <accessToken>`
+* **Status Codes:** `200 OK`, `401`
+* **Method & Path:** `DELETE /api/v1/notifications/clear-all`
+* **Headers:** `Authorization: Bearer <accessToken>`
+* **Status:** `200 OK`
